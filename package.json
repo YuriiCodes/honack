@@ -25,6 +25,7 @@
     "@types/node": "18.11.9",
     "@types/react": "18.0.25",
     "@types/react-dom": "18.0.9",
+    "@types/sequelize": "^4.28.14",
     "@typescript-eslint/eslint-plugin": "^5.36.1",
     "@typescript-eslint/parser": "^5.36.1",
     "autoprefixer": "10.4.13",
@@ -69,6 +70,8 @@
     "react-router-dom": "^6.8.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.0.0",
+    "sequelize": "^6.28.0",
+    "sequelize-typescript": "^2.1.5",
     "tslib": "^2.3.0"
   }
 }
