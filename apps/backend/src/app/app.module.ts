@@ -5,6 +5,12 @@ import { AppService } from './app.service';
 import {ConfigModule, ConfigService} from "@nestjs/config";
 import {SequelizeModule} from "@nestjs/sequelize";
 import configValidationSchema from "../../config.schema";
+import User from "../../models/User.entity";
+import Team from "../../models/Team.entity";
+import Iteration from "../../models/Iteration.entity";
+import Salary from "../../models/Salary.entity";
+import Task from "../../models/Task.entity";
+import TaskDescription from "../../models/TaskDescription.entity";
 
 @Module({
   imports: [  ConfigModule.forRoot({
@@ -24,6 +30,12 @@ import configValidationSchema from "../../config.schema";
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
         models: [
+          Iteration,
+          Salary,
+          Task,
+          TaskDescription,
+          Team,
+          User,
         ],
         autoLoadModels: true,
         synchronize: true,
