@@ -6,11 +6,11 @@ import {ConfigModule, ConfigService} from "@nestjs/config";
 import {SequelizeModule} from "@nestjs/sequelize";
 import configValidationSchema from "../../config.schema";
 import User from "../../models/User.entity";
-import Team from "../../models/Team.entity";
+import Project from "../../models/Project.entity";
 import Iteration from "../../models/Iteration.entity";
 import Salary from "../../models/Salary.entity";
 import Task from "../../models/Task.entity";
-import TaskDescription from "../../models/TaskDescription.entity";
+import UsersProjects from "../../models/UsersProjects";
 
 @Module({
   imports: [  ConfigModule.forRoot({
@@ -33,9 +33,9 @@ import TaskDescription from "../../models/TaskDescription.entity";
           Iteration,
           Salary,
           Task,
-          TaskDescription,
-          Team,
+          Project,
           User,
+          UsersProjects,
         ],
         autoLoadModels: true,
         synchronize: true,

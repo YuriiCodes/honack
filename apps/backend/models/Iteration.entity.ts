@@ -1,15 +1,15 @@
 import {BelongsTo, Column, ForeignKey, HasMany, Model, Table} from "sequelize-typescript";
-import Team from "./Team.entity";
+import Project from "./Project.entity";
 import Task from "./Task.entity";
 
 @Table
 export default class Iteration extends Model {
-  @ForeignKey(() => Team)
+  @ForeignKey(() => Project)
   @Column
-  teamId: number;
+  projectId: number;
 
-  @BelongsTo(() => Team)
-  team: Team;
+  @BelongsTo(() => Project)
+  project: Project;
 
   @Column
   number: number;

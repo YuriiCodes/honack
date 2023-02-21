@@ -1,6 +1,6 @@
 import {BelongsTo, Column, ForeignKey, HasOne, Model, Table} from "sequelize-typescript";
 import Iteration from "./Iteration.entity";
-import TaskDescription from "./TaskDescription.entity";
+import User from "./User.entity";
 
 @Table
 export default class Task extends Model {
@@ -11,6 +11,26 @@ export default class Task extends Model {
   @BelongsTo(() => Iteration)
   iteration: Iteration;
 
-  @HasOne(() => TaskDescription)
-  taskDescription: TaskDescription;
+  @Column
+  points: number;
+
+  @Column
+  title: string;
+
+  @Column
+  description: string;
+
+  @ForeignKey(() => User)
+  @Column
+  creatorId: number;
+
+  @HasOne(() => User, 'creatorId')
+  creator: User;
+
+  @ForeignKey(() => User)
+  @Column
+  executorId: number;
+
+  @HasOne(() => User, 'executorId')
+  executor: User;
 }
