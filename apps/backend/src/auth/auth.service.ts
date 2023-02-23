@@ -5,6 +5,7 @@ import {InjectModel} from "@nestjs/sequelize";
 import User from "../../models/User.entity";
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import {DomainUser} from "@honack/util-shared-types";
 @Injectable()
 export class AuthService {
   constructor(
@@ -64,12 +65,12 @@ export class AuthService {
     return `This action removes a #${id} auth`;
   }
 
-  async validateUser(username: string, password: string): Promise<any> {
+  async validateUser(username: string, password: string): Promise<DomainUser> {
     const user = await this.userModel.findOne({
       where: {
         username,
       }
-    })
+    }) as DomainUser;
 
     if (!user) return null;
     const passwordValid = await bcrypt.compare(password, user.password)
