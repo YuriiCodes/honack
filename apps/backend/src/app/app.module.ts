@@ -11,6 +11,8 @@ import Iteration from "../../models/Iteration.entity";
 import Salary from "../../models/Salary.entity";
 import Task from "../../models/Task.entity";
 import UsersProjects from "../../models/UsersProjects";
+import {AuthModule} from "../auth/auth.module";
+import {AuthController} from "../auth/auth.controller";
 
 @Module({
   imports: [  ConfigModule.forRoot({
@@ -40,8 +42,9 @@ import UsersProjects from "../../models/UsersProjects";
         autoLoadModels: true,
         synchronize: true,
       }),
-    }),],
-  controllers: [AppController],
+    }),
+  AuthModule],
+  controllers: [AppController, AuthController],
   providers: [AppService],
 })
 export class AppModule {}

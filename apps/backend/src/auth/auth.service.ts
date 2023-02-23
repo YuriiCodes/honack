@@ -1,15 +1,16 @@
-import {ConflictException, Injectable} from '@nestjs/common';
+import {ConflictException, Injectable, NotAcceptableException} from '@nestjs/common';
 import {CreateUserDto} from './dto/create-user.dto';
 import {UpdateAuthDto} from './dto/update-auth.dto';
 import {InjectModel} from "@nestjs/sequelize";
 import User from "../../models/User.entity";
 import * as bcrypt from 'bcrypt';
-
+import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(User)
     private userModel: typeof User,
+    private jwtService: JwtService
   ) {
   }
 
@@ -21,18 +22,28 @@ export class AuthService {
       }
     })
 
-
     // if user exists throw error
     if (user) {
       throw new ConflictException('User already exists')
     }
+
+    const userByUsername = await this.userModel.findOne({
+      where: {
+        username: createUserDto.username,
+      }
+    })
+    // if user exists throw error
+    if (userByUsername) {
+      throw new ConflictException('User already exists')
+    }
+
     const saltOrRounds = 10;
     const hashedPassword = await bcrypt.hash(createUserDto.password, saltOrRounds);
 
     // else create user
     return await this.userModel.create({
       email: createUserDto.email,
-      name: createUserDto.name,
+      username: createUserDto.username,
       password: hashedPassword,
     })
   }
@@ -51,5 +62,30 @@ export class AuthService {
 
   remove(id: number) {
     return `This action removes a #${id} auth`;
+  }
+
+  async validateUser(username: string, password: string): Promise<any> {
+    const user = await this.userModel.findOne({
+      where: {
+        username,
+      }
+    })
+
+    if (!user) return null;
+    const passwordValid = await bcrypt.compare(password, user.password)
+    if (!user) {
+      throw new NotAcceptableException('could not find the user');
+    }
+    if (user && passwordValid) {
+      return user;
+    }
+    return null;
+  }
+
+  async login(user: any) {
+    const payload = {username: user.username, sub: user._id};
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
   }
 }
