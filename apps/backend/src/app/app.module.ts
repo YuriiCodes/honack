@@ -13,6 +13,8 @@ import Task from "../../models/Task.entity";
 import UsersProjects from "../../models/UsersProjects";
 import {AuthModule} from "../auth/auth.module";
 import {AuthController} from "../auth/auth.controller";
+import {ProjectController} from "../project/project.controller";
+import {ProjectModule} from "../project/project.module";
 
 @Module({
   imports: [  ConfigModule.forRoot({
@@ -43,8 +45,8 @@ import {AuthController} from "../auth/auth.controller";
         synchronize: true,
       }),
     }),
-  AuthModule],
-  controllers: [AppController, AuthController],
+  AuthModule, ProjectModule],
+  controllers: [AppController, AuthController, ProjectController],
   providers: [AppService],
 })
 export class AppModule {}

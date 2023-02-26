@@ -5,6 +5,9 @@ import {SequelizeModule} from "@nestjs/sequelize";
 import User from "../../models/User.entity";
 import {LocalStrategy} from "./strategies/local.auth";
 import {JwtModule} from "@nestjs/jwt";
+import {jwtConstants} from "../constants";
+import {JwtStrategy} from "./strategies/jwt.strategy";
+
 
 @Module({
   imports: [
@@ -12,12 +15,12 @@ import {JwtModule} from "@nestjs/jwt";
       User,
     ]),
     JwtModule.register({
-      secret: 'secretKey',
+      secret: jwtConstants.secret,
       signOptions: { expiresIn: '60d' },
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy],
   exports: [AuthService],
 })
 export class AuthModule {}

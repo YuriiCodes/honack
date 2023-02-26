@@ -65,10 +65,10 @@ export class AuthService {
     return `This action removes a #${id} auth`;
   }
 
-  async validateUser(username: string, password: string): Promise<DomainUser> {
+  async validateUser(email: string, password: string): Promise<DomainUser> {
     const user = await this.userModel.findOne({
       where: {
-        username,
+        email,
       }
     }) as DomainUser;
 
@@ -83,8 +83,8 @@ export class AuthService {
     return null;
   }
 
-  async login(user: any) {
-    const payload = {username: user.username, sub: user._id};
+  async login(user: DomainUser & { _id: number }) {
+    const payload = {email: user.email, sub: user._id};
     return {
       access_token: this.jwtService.sign(payload),
     };

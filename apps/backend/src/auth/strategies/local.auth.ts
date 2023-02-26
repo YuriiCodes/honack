@@ -7,11 +7,13 @@ import {DomainUser} from "@honack/util-shared-types";
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private authService: AuthService) {
-    super();
+    super({
+      usernameField: 'email'
+    });
   }
 
-  async validate(username: string, password: string): Promise<DomainUser> {
-    const user = await this.authService.validateUser(username, password);
+  async validate(email: string, password: string): Promise<DomainUser> {
+    const user = await this.authService.validateUser(email, password);
     if (!user) {
       throw new UnauthorizedException();
     }
