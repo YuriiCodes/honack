@@ -12,3 +12,10 @@ export interface DomainUser {
   email: string;
   password: string;
 }
+
+export interface TokenPayload {
+  sub: number;
+  iat: number;
+  exp: number;
+  email: string;
+}
