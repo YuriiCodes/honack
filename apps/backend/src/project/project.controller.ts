@@ -1,25 +1,30 @@
-import {Controller, Get, Post, Body, Patch, Param, Delete, UseGuards} from '@nestjs/common';
-import { ProjectService } from './project.service';
-import { CreateProjectDto } from './dto/create-project.dto';
-import { UpdateProjectDto } from './dto/update-project.dto';
-import GetUser from "../../decorators/GetUser";
+import {Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req} from '@nestjs/common';
+import {ProjectService} from './project.service';
+import {CreateProjectDto} from './dto/create-project.dto';
+import {UpdateProjectDto} from './dto/update-project.dto';
+import GetUserEmail from "../../decorators/GetUserEmail";
 import {AuthGuard} from "@nestjs/passport";
 import {JwtAuthGuard} from "../auth/guards/jwt-auth.guard";
+import {InjectModel} from "@nestjs/sequelize";
+import User from "../../models/User.entity";
+import Project from "../../models/Project.entity";
+import GetCurrentUser from "../../decorators/GetCurrentUser";
 
+@UseGuards(JwtAuthGuard)
 @Controller('project')
 export class ProjectController {
-  constructor(private readonly projectService: ProjectService) {}
+  constructor(private readonly projectService: ProjectService) {
+  }
 
 
   @Post()
-  create(@Body() createProjectDto: CreateProjectDto) {
-    return this.projectService.create(createProjectDto);
+  create(@Body() createProjectDto: CreateProjectDto, @GetUserEmail() email : string) {
+    return this.projectService.create(createProjectDto, email);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get()
-  findAll(@GetUser() user) {
-    return user;
+  findAll(@GetUserEmail() user, @Req() req, @GetCurrentUser() currentUser) {
+    return currentUser;
   }
 
   @Get(':id')

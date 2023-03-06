@@ -1,11 +1,21 @@
-import { Injectable } from '@nestjs/common';
-import { CreateProjectDto } from './dto/create-project.dto';
-import { UpdateProjectDto } from './dto/update-project.dto';
+import {Injectable} from '@nestjs/common';
+import {CreateProjectDto} from './dto/create-project.dto';
+import {UpdateProjectDto} from './dto/update-project.dto';
+import {InjectModel} from "@nestjs/sequelize";
+import Project from "../../models/Project.entity";
 
 @Injectable()
 export class ProjectService {
-  create(createProjectDto: CreateProjectDto) {
-    return 'This action adds a new project';
+  constructor(@InjectModel(Project)
+              private projectModel: typeof Project) {
+  }
+
+ async  create(createProjectDto: CreateProjectDto, userEmail: string) {
+    // return await this.projectModel.create({
+      // name: createProjectDto.name,
+      // description: createProjectDto.description,
+      // userId: ,
+    // });
   }
 
   findAll() {

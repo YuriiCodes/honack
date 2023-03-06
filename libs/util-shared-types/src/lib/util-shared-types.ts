@@ -14,8 +14,25 @@ export interface DomainUser {
 }
 
 export interface TokenPayload {
+  id: number;
   sub: number;
   iat: number;
   exp: number;
   email: string;
+}
+
+export type DecodedToken = {
+  payload: {
+    sub: string;
+    id: number;
+  };
+  iat: number;
+  exp: number;
+};
+
+export type UserFromToken = {
+  id: number;
+  email: string;
+  iat: number;
+  exp: number;
 }
