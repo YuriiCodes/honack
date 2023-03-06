@@ -4,21 +4,34 @@ import {UpdateProjectDto} from './dto/update-project.dto';
 import {InjectModel} from "@nestjs/sequelize";
 import Project from "../../models/Project.entity";
 import {ProjectType} from "@honack/util-shared-types";
+import UsersProjects from "../../models/UsersProjects";
 
 @Injectable()
 export class ProjectService {
   constructor(@InjectModel(Project)
-              private projectModel: typeof Project) {
+              private projectModel: typeof Project,
+              @InjectModel(UsersProjects)
+              private usersProjectsModel: typeof UsersProjects
+  ) {
   }
 
   async create(createProjectDto: CreateProjectDto, userId: number): Promise<ProjectType> {
     // check if project name already exists
     await this.checkIfProjectNameExists(createProjectDto.name);
 
-    return await this.projectModel.create({
+
+    const project =  await this.projectModel.create({
       ...createProjectDto,
       ownerId: userId
     }) as ProjectType;
+
+    // add project to user's projects
+    await this.usersProjectsModel.create({
+      userId,
+      projectId: project.id
+    });
+
+    return project;
   }
 
   async findAll() {
