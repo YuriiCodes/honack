@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { ExtractJwt } from 'passport-jwt';
 import jwt_decode from 'jwt-decode';
-import {DecodedToken, UserFromToken} from "../../../libs/util-shared-types/src";
+import { UserFromToken } from '@honack/util-shared-types';
 
 
 

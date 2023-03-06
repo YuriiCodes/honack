@@ -36,3 +36,10 @@ export type UserFromToken = {
   iat: number;
   exp: number;
 }
+
+export type ProjectType = AddedByOrm & {
+  id: number;
+  name: string;
+  description: string;
+  ownerId: number;
+}
