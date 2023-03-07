@@ -11,8 +11,6 @@ export default class Iteration extends Model {
   @BelongsTo(() => Project)
   project: Project;
 
-  @Column
-  number: number;
 
   @Column
   name: string;

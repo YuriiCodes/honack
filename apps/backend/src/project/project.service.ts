@@ -56,6 +56,12 @@ export class ProjectService {
       throw new ConflictException('Project name already exists');
     }
   }
+  async checkIfProjectExists(id: number) {
+    const existingProject = await this.projectModel.findByPk(id)
+    if (!existingProject) {
+      throw new NotFoundException('Project with given ID does not exist');
+    }
+  }
 
   async update(id: number, updateProjectDto: UpdateProjectDto) {
     const project = await this.projectModel.findByPk(id);

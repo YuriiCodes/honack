@@ -15,6 +15,8 @@ import {AuthModule} from "../auth/auth.module";
 import {AuthController} from "../auth/auth.controller";
 import {ProjectController} from "../project/project.controller";
 import {ProjectModule} from "../project/project.module";
+import {IterationController} from "../iteration/iteration.controller";
+import {IterationModule} from "../iteration/iteration.module";
 
 @Module({
   imports: [  ConfigModule.forRoot({
@@ -45,8 +47,8 @@ import {ProjectModule} from "../project/project.module";
         synchronize: true,
       }),
     }),
-  AuthModule, ProjectModule],
-  controllers: [AppController, AuthController, ProjectController],
+  AuthModule, ProjectModule, IterationModule],
+  controllers: [AppController, AuthController, ProjectController, IterationController],
   providers: [AppService],
 })
 export class AppModule {}
