@@ -15,6 +15,13 @@ export class AuthService {
   ) {
   }
 
+  async checkIfUserExists(id: number) {
+    const existingUser = await this.userModel.findByPk(id);
+    if (!existingUser) {
+      throw new NotAcceptableException('User does not exist');
+    }
+  }
+
   async create(createUserDto: CreateUserDto) {
     // find user by email:
     const user = await this.userModel.findOne({

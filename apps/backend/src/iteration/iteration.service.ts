@@ -1,4 +1,4 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
+import { Injectable, NotAcceptableException, NotFoundException } from "@nestjs/common";
 import { CreateIterationDto } from './dto/create-iteration.dto';
 import { UpdateIterationDto } from './dto/update-iteration.dto';
 import {ProjectService} from "../project/project.service";
@@ -54,5 +54,16 @@ export class IterationService {
     }
     await iteration.destroy();
     return iteration;
+  }
+
+  async checkIfIterationExists(id: number) {
+    const iteration = await this.iterationModel.findByPk(id);
+    if (!iteration) {
+      throw new NotAcceptableException('Iteration not found');
+    }
+  }
+
+  async checkIfUserBelongsToProject(userId: number, projectId: number) {
+    await this.projectService.checkIfUserBelongsToProject(userId, projectId);
   }
 }

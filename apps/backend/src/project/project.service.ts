@@ -77,4 +77,24 @@ export class ProjectService {
       }
     });
   }
+
+  async checkIfUserBelongsToProject(userId, projectId) {
+    const userProject = await this.usersProjectsModel.findOne({
+      where: {
+        userId,
+        projectId
+      }
+    });
+    if (!userProject) {
+      throw new NotFoundException(`User ${userId} does not belong to project ${projectId}`);
+    }
+  }
+
+  async addUserToProject(projectId: number, userId: number) {
+    await this.checkIfProjectExists(projectId);
+    return await this.usersProjectsModel.create({
+      projectId,
+      userId
+    });
+  }
 }
