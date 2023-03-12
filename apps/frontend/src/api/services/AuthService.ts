@@ -8,7 +8,8 @@ export default class AuthService {
       username,
     });
     if (response.status === 201) {
-      LocalStorageService.setToken(response.data);
+      console.log(response.data.access_token)
+      LocalStorageService.setToken(response.data.access_token);
     }
     return response;
   }

@@ -32,6 +32,7 @@ const Register = () => {
             // success
             if (response.status === 201) {
               enqueueSnackbar("You've successfully registered", { variant: "success" });
+              return;
             }
           } catch (e: unknown | AxiosError) {
             // check if this is axios error
@@ -43,6 +44,7 @@ const Register = () => {
             }
             // Unknown error
             enqueueSnackbar("Something went wrong", { variant: "error" });
+            return;
           }
         }}
       >
