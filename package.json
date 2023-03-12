@@ -68,6 +68,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "daisyui": "^2.50.0",
+    "formik": "^2.2.9",
     "jwt-decode": "^3.1.2",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
@@ -80,7 +81,7 @@
     "rxjs": "^7.0.0",
     "sequelize": "^6.29.1",
     "sequelize-typescript": "^2.1.5",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "yup": "^1.0.2"
   }
 }
-
