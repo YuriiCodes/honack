@@ -1,5 +1,6 @@
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
+import AuthService from "../api/services/AuthService";
 
 const SignupSchema = Yup.object().shape({
   username: Yup.string()
@@ -21,9 +22,11 @@ const Register = () => {
           password: ""
         }}
         validationSchema={SignupSchema}
-        onSubmit={values => {
+        onSubmit={async values => {
           // same shape as initial values
           console.log(values);
+          const data =  await AuthService.signUp(values.email, values.password, values.username)
+          console.log(data)
         }}
       >
         {({ errors, touched }) => (
@@ -75,6 +78,7 @@ const Register = () => {
           </Form>
         )}
       </Formik>
+
     </div>
   );
 };

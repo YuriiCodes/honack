@@ -49,11 +49,17 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(createUserDto.password, saltOrRounds);
 
     // else create user
-    return await this.userModel.create({
+    const createdUser = await this.userModel.create({
       email: createUserDto.email,
       username: createUserDto.username,
       password: hashedPassword,
     })
+    return await this.login({
+      email: createdUser.email,
+      password: createUserDto.password,
+      username: createUserDto.username,
+      _id: createdUser.id,
+    });
   }
 
   findAll() {
