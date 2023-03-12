@@ -10,6 +10,6 @@ export default class AuthService {
     if (response.status === 201) {
       LocalStorageService.setToken(response.data);
     }
-    return response.data;
+    return response;
   }
 }

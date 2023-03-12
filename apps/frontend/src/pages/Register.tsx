@@ -1,6 +1,8 @@
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import AuthService from "../api/services/AuthService";
+import { enqueueSnackbar } from "notistack";
+import axios, { AxiosError } from "axios";
 
 const SignupSchema = Yup.object().shape({
   username: Yup.string()
@@ -25,8 +27,23 @@ const Register = () => {
         onSubmit={async values => {
           // same shape as initial values
           console.log(values);
-          const data =  await AuthService.signUp(values.email, values.password, values.username)
-          console.log(data)
+          try {
+            const response = await AuthService.signUp(values.email, values.password, values.username);
+            // success
+            if (response.status === 201) {
+              enqueueSnackbar("You've successfully registered", { variant: "success" });
+            }
+          } catch (e: unknown | AxiosError) {
+            // check if this is axios error
+            if (axios.isAxiosError(e)) {
+              if (e.response?.status === 409) {
+                enqueueSnackbar("User already exists", { variant: "error" });
+                return;
+              }
+            }
+            // Unknown error
+            enqueueSnackbar("Something went wrong", { variant: "error" });
+          }
         }}
       >
         {({ errors, touched }) => (
@@ -65,7 +82,7 @@ const Register = () => {
               <label className="input-group" htmlFor={"password"}>
                 <span>password</span>
                 <div className={"flex justify-center"}>
-                  <Field type="password" id="password"  name="password" className="input input-bordered" />
+                  <Field type="password" id="password" name="password" className="input input-bordered" />
                   {errors.password && touched.password ? (
                     <div className={"text-orange-700"}>{errors.password}</div>
                   ) : null}
@@ -78,7 +95,6 @@ const Register = () => {
           </Form>
         )}
       </Formik>
-
     </div>
   );
 };

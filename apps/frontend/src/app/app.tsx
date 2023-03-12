@@ -7,13 +7,11 @@ import Register from "../pages/Register";
 
 export function App() {
   return (
-    <>
-      <Routes>
+    <Routes>
         <Route path="/" element={<Home/>}/>
         <Route path="/login" element={<Login/>} />
         <Route path="/register" element={<Register/>} />
       </Routes>
-    </>
   );
 }
 
