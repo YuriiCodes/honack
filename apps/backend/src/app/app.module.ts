@@ -19,6 +19,8 @@ import {IterationController} from "../iteration/iteration.controller";
 import {IterationModule} from "../iteration/iteration.module";
 import { TaskModule } from "../task/task.module";
 import { TaskController } from "../task/task.controller";
+import { SalaryModule } from "../salary/salary.module";
+import { SalaryController } from "../salary/salary.controller";
 
 @Module({
   imports: [  ConfigModule.forRoot({
@@ -49,8 +51,8 @@ import { TaskController } from "../task/task.controller";
         synchronize: true,
       }),
     }),
-  AuthModule, ProjectModule, IterationModule, TaskModule],
-  controllers: [AppController, AuthController, ProjectController, IterationController, TaskController],
+  AuthModule, ProjectModule, IterationModule, TaskModule, SalaryModule],
+  controllers: [AppController, AuthController, ProjectController, IterationController, TaskController, SalaryController],
   providers: [AppService],
 })
 export class AppModule {}

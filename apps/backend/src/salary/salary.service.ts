@@ -1,26 +1,51 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateSalaryDto } from './dto/create-salary.dto';
 import { UpdateSalaryDto } from './dto/update-salary.dto';
+import { InjectModel } from "@nestjs/sequelize";
+import Salary from "../../models/Salary.entity";
 
 @Injectable()
 export class SalaryService {
-  create(createSalaryDto: CreateSalaryDto) {
-    return 'This action adds a new salary';
+  constructor(@InjectModel(Salary)
+              private salaryModel: typeof Salary) {
+
+
   }
 
-  findAll() {
-    return `This action returns all salary`;
+  async create(createSalaryDto: CreateSalaryDto) {
+    try {
+      return await this.salaryModel.create({
+        ...createSalaryDto
+      });
+    } catch (e) {
+      throw new NotFoundException("User not found")
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} salary`;
+  async findAll() {
+    return await this.salaryModel.findAll();
   }
 
-  update(id: number, updateSalaryDto: UpdateSalaryDto) {
-    return `This action updates a #${id} salary`;
+  async findOne(id: number) {
+    return await this.salaryModel.findByPk(id);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} salary`;
+  async update(id: number, updateSalaryDto: UpdateSalaryDto) {
+    const salary = await this.salaryModel.findByPk(id);
+    if (!salary) {
+      throw new NotFoundException('Salary not found');
+    }
+    return await salary.update({
+      ...updateSalaryDto
+    });
+  }
+
+  async remove(id: number) {
+    const salary = await this.salaryModel.findByPk(id);
+    if (!salary) {
+      throw new NotFoundException('Salary not found');
+    }
+    await salary.destroy();
+    return salary;
   }
 }

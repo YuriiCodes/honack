@@ -18,8 +18,8 @@ export class TaskController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.taskService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.taskService.findOne(id);
   }
 
   @Get('iteration/:id')
