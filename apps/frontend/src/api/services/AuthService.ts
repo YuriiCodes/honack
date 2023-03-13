@@ -1,16 +1,37 @@
 import $api from "../http";
 import LocalStorageService from "./LocalStorageService";
+import { AuthApiResponse, UserFromToken } from "@honack/util-shared-types";
+
 export default class AuthService {
-  static async signUp(email:string, password:string, username:string) {
-    const response = await $api.post('/auth/register', {
+  static async signUp(email: string, password: string, username: string) {
+    const response = await $api.post<AuthApiResponse>("/auth/register", {
       email,
       password,
-      username,
+      username
     });
     if (response.status === 201) {
-      console.log(response.data.access_token)
       LocalStorageService.setToken(response.data.access_token);
     }
     return response;
+  }
+
+  static async login(email: string, password: string) {
+    const response = await $api.post<AuthApiResponse>("/auth/login", {
+      email, password
+    });
+    if (response.status === 200) {
+      LocalStorageService.setToken(response.data.access_token);
+    }
+    return response;
+  }
+
+  static parseJwt(token: string): UserFromToken {
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const jsonPayload = decodeURIComponent(window.atob(base64).split("").map(function(c) {
+      return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(""));
+
+    return JSON.parse(jsonPayload) as UserFromToken;
   }
 }

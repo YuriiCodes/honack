@@ -3,6 +3,7 @@ import * as Yup from "yup";
 import AuthService from "../api/services/AuthService";
 import { enqueueSnackbar } from "notistack";
 import axios, { AxiosError } from "axios";
+import { useAuthStore } from "../stores/AuthStore";
 
 const SignupSchema = Yup.object().shape({
   username: Yup.string()
@@ -15,6 +16,7 @@ const SignupSchema = Yup.object().shape({
 
 
 const Register = () => {
+  const login = useAuthStore((state) => state.login);
   return (
     <div className={"container mx-auto flex justify-center h-screen"}>
       <Formik
@@ -30,6 +32,7 @@ const Register = () => {
             // success
             if (response.status === 201) {
               enqueueSnackbar("You've successfully registered", { variant: "success" });
+              login(AuthService.parseJwt(response.data.access_token));
               return;
             }
           } catch (e: unknown | AxiosError) {

@@ -43,3 +43,7 @@ export type ProjectType = AddedByOrm & {
   description: string;
   ownerId: number;
 }
+
+export type AuthApiResponse = {
+  access_token: string;
+}

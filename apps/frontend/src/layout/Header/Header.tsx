@@ -1,4 +1,9 @@
+import { Link } from "react-router-dom";
+import { useAuthStore } from "../../stores/AuthStore";
+
 const Header = () => {
+  const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
   return (
     <div className="navbar bg-base-300">
         <div className="navbar-start">
@@ -21,7 +26,7 @@ const Header = () => {
               <li><a>Item 3</a></li>
             </ul>
           </div>
-          <a className="btn btn-ghost normal-case text-xl">Honack</a>
+          <Link to="/" className="btn btn-ghost normal-case text-xl">Honack</Link>
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
@@ -40,7 +45,7 @@ const Header = () => {
           </ul>
         </div>
         <div className="navbar-end">
-          <a className="btn">Get started</a>
+          {user ? (<a className="btn">My profile</a>): ("Login") }
         </div>
       </div>
   )
