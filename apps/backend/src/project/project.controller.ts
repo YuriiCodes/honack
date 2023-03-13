@@ -14,7 +14,7 @@ export class ProjectController {
 
   @Post()
   create(@Body() createProjectDto: CreateProjectDto, @GetCurrentUser() currentUser: UserFromToken) {
-    return this.projectService.create(createProjectDto, currentUser.id);
+    return this.projectService.create(createProjectDto, currentUser.sub);
   }
 
   @Get()

@@ -25,8 +25,6 @@ const Register = () => {
         }}
         validationSchema={SignupSchema}
         onSubmit={async values => {
-          // same shape as initial values
-          console.log(values);
           try {
             const response = await AuthService.signUp(values.email, values.password, values.username);
             // success
