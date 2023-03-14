@@ -1,6 +1,6 @@
 import $api from "../http";
 import LocalStorageService from "./LocalStorageService";
-import { AuthApiResponse, UserFromToken } from "@honack/util-shared-types";
+import { AuthApiResponse, GetMeApiResponse, UserFromToken } from "@honack/util-shared-types";
 
 export default class AuthService {
   static async signUp(email: string, password: string, username: string) {
@@ -23,6 +23,10 @@ export default class AuthService {
       LocalStorageService.setToken(response.data.access_token);
     }
     return response;
+  }
+
+  static async getMe() {
+    return await $api.get<GetMeApiResponse>("/auth/me");
   }
 
   static parseJwt(token: string): UserFromToken {

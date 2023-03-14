@@ -47,3 +47,7 @@ export type ProjectType = AddedByOrm & {
 export type AuthApiResponse = {
   access_token: string;
 }
+
+export type GetMeApiResponse = {
+  email: string;
+}
