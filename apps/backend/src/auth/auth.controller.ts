@@ -3,7 +3,6 @@ import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { HttpStatusCode } from "axios";
 
 @Controller('auth')
 export class AuthController {
@@ -14,6 +13,12 @@ export class AuthController {
     return this.authService.create(createAuthDto);
   }
 
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/me')
+  getMe(@Request() req) {
+    return req.user;
+  }
   @UseGuards(AuthGuard('local'))
   @Post('/login')
   @HttpCode(200)
