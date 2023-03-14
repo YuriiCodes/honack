@@ -5,7 +5,7 @@ import {InjectModel} from "@nestjs/sequelize";
 import Project from "../../models/Project.entity";
 import {ProjectType} from "@honack/util-shared-types";
 import UsersProjects from "../../models/UsersProjects";
-
+import { v4 as uuidv4 } from 'uuid';
 @Injectable()
 export class ProjectService {
   constructor(@InjectModel(Project)
@@ -14,7 +14,6 @@ export class ProjectService {
               private usersProjectsModel: typeof UsersProjects
   ) {
   }
-
   async create(createProjectDto: CreateProjectDto, userId: number): Promise<ProjectType> {
     // check if project name already exists
     await this.checkIfProjectNameExists(createProjectDto.name);
@@ -22,7 +21,8 @@ export class ProjectService {
 
     const project =  await this.projectModel.create({
       ...createProjectDto,
-      ownerId: userId
+      ownerId: userId,
+      joinCode: uuidv4(),
     }) as ProjectType;
 
     // add project to user's projects
@@ -30,7 +30,6 @@ export class ProjectService {
       userId,
       projectId: project.id
     });
-
     return project;
   }
 
@@ -90,11 +89,19 @@ export class ProjectService {
     }
   }
 
-  async addUserToProject(projectId: number, userId: number) {
-    await this.checkIfProjectExists(projectId);
+  async addUserToProject(userId: number, joinCode: string) {
+    const project = await this.projectModel.findOne({
+      where: {
+        joinCode
+      }
+    })
+    if (!project) {
+      throw new NotFoundException('Project with given join code does not exist');
+    }
     return await this.usersProjectsModel.create({
-      projectId,
-      userId
+      userId,
+      projectId: project.id
     });
+
   }
 }

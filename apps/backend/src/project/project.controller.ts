@@ -5,6 +5,7 @@ import {UpdateProjectDto} from './dto/update-project.dto';
 import {JwtAuthGuard} from "../auth/guards/jwt-auth.guard";
 import GetCurrentUser from "../../decorators/GetCurrentUser";
 import {UserFromToken} from "@honack/util-shared-types";
+import { JoinProjectDto } from "./dto/join-project.dto";
 
 @UseGuards(JwtAuthGuard)
 @Controller('project')
@@ -37,6 +38,9 @@ export class ProjectController {
     return this.projectService.remove(+id);
   }
 
-  //TODO: ADD invite user route
+  @Post("/join")
+  joinProject(@Body()joinProjectDto: JoinProjectDto, @GetCurrentUser() user: UserFromToken) {
+    return this.projectService.addUserToProject(user.sub, joinProjectDto.joinCode);
+  }
 
 }
