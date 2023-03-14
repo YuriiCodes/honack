@@ -28,6 +28,10 @@ export default class AuthService {
   static async getMe() {
     return await $api.get<GetMeApiResponse>("/auth/me");
   }
+  static logout() {
+    LocalStorageService.cleanToken();
+
+  }
 
   static parseJwt(token: string): UserFromToken {
     const base64Url = token.split(".")[1];
