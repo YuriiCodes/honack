@@ -7,4 +7,10 @@ export default class ProjectsService {
       description
     });
   }
+
+  static async joinProject(joinCode:string) {
+    return await $api.post('/project/join', {
+      joinCode
+    });
+  }
 }
