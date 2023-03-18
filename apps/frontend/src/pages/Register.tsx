@@ -4,6 +4,7 @@ import AuthService from "../api/services/AuthService";
 import { enqueueSnackbar } from "notistack";
 import axios, { AxiosError } from "axios";
 import { useAuthStore } from "../stores/AuthStore";
+import { useNavigate } from "react-router-dom";
 
 const SignupSchema = Yup.object().shape({
   username: Yup.string()
@@ -17,6 +18,8 @@ const SignupSchema = Yup.object().shape({
 
 const Register = () => {
   const login = useAuthStore((state) => state.login);
+  const navigate = useNavigate();
+
   return (
     <div className={"container mx-auto flex justify-center h-screen"}>
       <Formik
@@ -33,7 +36,7 @@ const Register = () => {
             if (response.status === 201) {
               enqueueSnackbar("You've successfully registered", { variant: "success" });
               login(AuthService.parseJwt(response.data.access_token));
-              return;
+              navigate("/chooseTeam");
             }
           } catch (e: unknown | AxiosError) {
             // check if this is axios error
