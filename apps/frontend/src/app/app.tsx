@@ -10,6 +10,7 @@ import { useAuthStore } from "../stores/AuthStore";
 import AuthService from "../api/services/AuthService";
 import LocalStorageService from "../api/services/LocalStorageService";
 import axios, { AxiosError } from "axios";
+import { Project } from "../pages/Project";
 
 export function App() {
   const login = useAuthStore((state) => state.login);
@@ -38,6 +39,7 @@ export function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/chooseTeam" element={<ChooseTeam />} />
+      <Route path="/project/:id" element={<Project />} />
     </Routes>
   );
 }
