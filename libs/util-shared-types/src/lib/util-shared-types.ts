@@ -37,11 +37,17 @@ export type UserFromToken = {
   exp: number;
 }
 
+export type IterationType = AddedByOrm & {
+  id: number;
+  projectId: number;
+  description: string;
+}
 export type ProjectType = AddedByOrm & {
   id: number;
   name: string;
   description: string;
   ownerId: number;
+  iterations?: IterationType[];
 }
 
 export type AuthApiResponse = {

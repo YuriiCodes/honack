@@ -6,6 +6,7 @@ import Project from "../../models/Project.entity";
 import { ProjectType } from "@honack/util-shared-types";
 import UsersProjects from "../../models/UsersProjects";
 import { v4 as uuidv4 } from "uuid";
+import Iteration from "../../models/Iteration.entity";
 
 @Injectable()
 export class ProjectService {
@@ -36,11 +37,24 @@ export class ProjectService {
   }
 
   async findAll(): Promise<ProjectType[]> {
-    return await this.projectModel.findAll() as ProjectType[];
+    return await this.projectModel.findAll({
+      include: [
+        {
+          model: Iteration,
+          as: "iterations"
+        }
+      ]
+    }) as ProjectType[];
   }
 
   async findOne(id: number): Promise<ProjectType> {
-    const project = await this.projectModel.findByPk(id);
+    const project = await this.projectModel.findByPk(id, {
+      include: [
+        {
+          model: Iteration,
+          as: "iterations"
+        }]
+    });
     if (!project) {
       throw new NotFoundException("Project not found");
     }
