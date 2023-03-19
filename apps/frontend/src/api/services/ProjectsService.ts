@@ -18,4 +18,8 @@ export default class ProjectsService {
   static async getProjectById(id:string) {
     return await $api.get<ProjectType>(`/project/${id}`);
   }
+
+  static async getProjects() {
+    return await $api.get<ProjectType[]>('/project');
+  }
 }
