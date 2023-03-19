@@ -46,7 +46,13 @@ export class ProjectService {
     return await this.projectModel.findAll({
       where: {
         id: projectIds
-      }
+      },
+      include: [
+        {
+          model: Iteration,
+          as: "iterations"
+        }
+      ]
     }) as ProjectType[];
   }
 
