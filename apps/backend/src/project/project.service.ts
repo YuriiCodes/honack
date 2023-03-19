@@ -3,7 +3,7 @@ import { CreateProjectDto } from "./dto/create-project.dto";
 import { UpdateProjectDto } from "./dto/update-project.dto";
 import { InjectModel } from "@nestjs/sequelize";
 import Project from "../../models/Project.entity";
-import { ProjectType } from "@honack/util-shared-types";
+import { ProjectType, UserFromToken } from "@honack/util-shared-types";
 import UsersProjects from "../../models/UsersProjects";
 import { v4 as uuidv4 } from "uuid";
 import Iteration from "../../models/Iteration.entity";
@@ -36,14 +36,17 @@ export class ProjectService {
     return project;
   }
 
-  async findAll(): Promise<ProjectType[]> {
+  async findAll(currentUser: UserFromToken): Promise<ProjectType[]> {
+    const userProjects = await this.usersProjectsModel.findAll({
+      where: {
+        userId: currentUser.sub
+      }
+    });
+    const projectIds = userProjects.map(userProject => userProject.projectId);
     return await this.projectModel.findAll({
-      include: [
-        {
-          model: Iteration,
-          as: "iterations"
-        }
-      ]
+      where: {
+        id: projectIds
+      }
     }) as ProjectType[];
   }
 

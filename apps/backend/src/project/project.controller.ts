@@ -19,8 +19,8 @@ export class ProjectController {
   }
 
   @Get()
-  findAll() {
-    return this.projectService.findAll();
+  findAll(@GetCurrentUser() currentUser: UserFromToken) {
+    return this.projectService.findAll(currentUser);
   }
 
   @Get(':id')
