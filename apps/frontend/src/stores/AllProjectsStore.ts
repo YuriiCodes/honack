@@ -6,6 +6,7 @@ import { devtools } from "zustand/middleware";
 interface AllProjectsState {
   projects: ProjectType[];
   setProjects: (projects: ProjectType[]) => void;
+  getProjectById: (id: number) => ProjectType | undefined;
   removeProjects: () => void;
   addProject: (project: ProjectType) => void;
   removeProject: (project: ProjectType) => void;
@@ -13,7 +14,7 @@ interface AllProjectsState {
 }
 
 export const useAllProjectsStore = create<AllProjectsState>()(
-  devtools((set) => ({
+  devtools((set, get) => ({
     projects: [],
     setProjects: (projects: ProjectType[]) => set({ projects }),
     removeProjects: () => set({ projects: [] }),
@@ -21,6 +22,9 @@ export const useAllProjectsStore = create<AllProjectsState>()(
     removeProject: (project: ProjectType) => set((state) => ({ projects: state.projects.filter((p) => p.id !== project.id) })),
     updateProject: (project: ProjectType) => set((state) => ({
       projects: state.projects.map((p) => p.id === project.id ? project : p)
-    }))
+    })),
+    getProjectById(id:number) {
+      return get().projects.find((p) => p.id === id);
+    }
   }))
 );

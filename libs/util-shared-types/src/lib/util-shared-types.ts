@@ -40,6 +40,7 @@ export type UserFromToken = {
 export type IterationType = AddedByOrm & {
   id: number;
   projectId: number;
+  name: string;
   description: string;
 }
 export type ProjectType = AddedByOrm & {

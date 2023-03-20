@@ -71,6 +71,10 @@ const Header = () => {
                 }}>Log out
                 </button>
               </li>
+              <li>
+                <Link to={"/projects"}>My projects
+                </Link>
+              </li>
             </ul>
           </li>
         </ul>) : (
