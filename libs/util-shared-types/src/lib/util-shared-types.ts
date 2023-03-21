@@ -58,3 +58,11 @@ export type AuthApiResponse = {
 export type GetMeApiResponse = {
   email: string;
 }
+export type TaskType = AddedByOrm & {
+  id: number;
+  iterationId: number;
+  title: string;
+  description: string;
+  creatorId: number;
+  executorId: number;
+}
