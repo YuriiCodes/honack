@@ -1,10 +1,13 @@
+import { TaskStatus } from "@honack/util-shared-types";
+
 interface TaskCardProps {
   title: string;
   description: string;
   points: number;
   assignedTo: string;
+  status: TaskStatus.IN_PROGRESS | TaskStatus.TODO | TaskStatus.DONE;
 }
-const TaskCard = ({title, description, points, assignedTo}: TaskCardProps) => {
+const TaskCard = ({title, description, points, assignedTo, status}: TaskCardProps) => {
   return (
     <div className="card w-96 bg-base-100 shadow-xl my-4">
       <div className="card-body">
@@ -12,7 +15,7 @@ const TaskCard = ({title, description, points, assignedTo}: TaskCardProps) => {
           {title}
           <div className="badge badge-secondary">{points}</div>
         </h2>
-        <p>{description}</p>
+        <p>{status} | {description}</p>
         <div className="card-actions justify-end">
           <div className="badge badge-outline">Assigned to @{assignedTo}</div>
         </div>
