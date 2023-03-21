@@ -1,6 +1,8 @@
-import {BelongsTo, Column, ForeignKey, HasOne, Model, Table} from "sequelize-typescript";
+import { BelongsTo, Column, ForeignKey, HasOne, Model, Table } from "sequelize-typescript";
 import Iteration from "./Iteration.entity";
 import User from "./User.entity";
+import { TaskStatus } from "@honack/util-shared-types";
+import { DataTypes } from 'sequelize';
 
 @Table
 export default class Task extends Model {
@@ -19,6 +21,11 @@ export default class Task extends Model {
 
   @Column
   description: string;
+
+  // Add  the status column & map it  to the TaskStatus enum
+  @Column({type: DataTypes.ENUM(...Object.values(TaskStatus)), defaultValue: TaskStatus.TODO})
+  status: TaskStatus;
+
 
   @ForeignKey(() => User)
   @Column

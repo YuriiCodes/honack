@@ -58,6 +58,12 @@ export type AuthApiResponse = {
 export type GetMeApiResponse = {
   email: string;
 }
+
+export enum TaskStatus {
+  TODO = "TODO",
+  IN_PROGRESS = "IN_PROGRESS",
+  DONE = "DONE",
+}
 export type TaskType = AddedByOrm & {
   id: number;
   iterationId: number;
@@ -65,4 +71,6 @@ export type TaskType = AddedByOrm & {
   description: string;
   creatorId: number;
   executorId: number;
+  points: number;
+  status: TaskStatus;
 }
