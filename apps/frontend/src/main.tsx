@@ -10,12 +10,10 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  <StrictMode>
     <BrowserRouter>
       <Layout>
         <SnackbarProvider />
         <App/>
       </Layout>
     </BrowserRouter>
-  </StrictMode>
 );
