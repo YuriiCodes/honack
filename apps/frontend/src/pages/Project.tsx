@@ -6,6 +6,7 @@ import { enqueueSnackbar } from "notistack";
 import { useAllProjectsStore } from "../stores/AllProjectsStore";
 import { ProjectType } from "@honack/util-shared-types";
 import CreateIterationModal from "../components/CreateIterationModal/CreateIterationModal";
+import Board from "../components/Board/Board";
 
 export const Project = () => {
   const { id } = useParams();
@@ -77,6 +78,8 @@ export const Project = () => {
           </div>
         )}
       </div>
+
+      <Board />
     </div>
   );
 };

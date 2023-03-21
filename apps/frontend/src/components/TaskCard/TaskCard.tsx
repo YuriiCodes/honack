@@ -6,8 +6,7 @@ interface TaskCardProps {
 }
 const TaskCard = ({title, description, points, assignedTo}: TaskCardProps) => {
   return (
-    <div className="card w-96 bg-base-100 shadow-xl">
-      <figure><img src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="Shoes" /></figure>
+    <div className="card w-96 bg-base-100 shadow-xl my-4">
       <div className="card-body">
         <h2 className="card-title">
           {title}
