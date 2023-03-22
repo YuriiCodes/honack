@@ -34,7 +34,7 @@ const inProgressDummy: TaskType[] = [
   {
     createdAt: new Date(),
     updatedAt: new Date(),
-    id: 2,
+    id: 222,
     iterationId: 1,
     title: "test task 3 in progress",
     description: "test description",
@@ -72,34 +72,39 @@ const doneDummy: TaskType[] = [
   }
 ];
 
+enum BoardColumnIDs {
+  TODO = "todo",
+  IN_PROGRESS = "inProgress",
+  DONE = "done"
+
+}
 const Board = () => {
-  const setTasks = useTaskStore((state) => state.setTasks);
-  const tasks = useTaskStore((state) => state.tasks);
+  // const setTasks = useTaskStore((state) => state.setTasks);
+  // const tasks = useTaskStore((state) => state.tasks);
 
-  const [toDoTasks, setToDoTasks] = useState<TaskType[]>([]);
-  const [inProgressTasks, setInProgressTasks] = useState<TaskType[]>([]);
-  const [doneTasks, setDoneTasks] = useState<TaskType[]>([]);
+  const [toDoTasks, setToDoTasks] = useState<TaskType[]>(todoDummy);
+  const [inProgressTasks, setInProgressTasks] = useState<TaskType[]>(inProgressDummy);
+  const [doneTasks, setDoneTasks] = useState<TaskType[]>(doneDummy);
 
-  useEffect(() => {
-    setTasks(todoDummy);
-    setToDoTasks(todoDummy);
-    setInProgressTasks(inProgressDummy);
-    setDoneTasks(doneDummy);
-
-    // const todo = tasks.filter((task) => task.status === TaskStatus.TODO);
-    // setToDoTasks(todo);
-    //
-    // const inProgress = tasks.filter((task) => task.status === TaskStatus.IN_PROGRESS);
-    // setInProgressTasks(inProgress);
-    //
-    // const done = tasks.filter((task) => task.status === TaskStatus.DONE);
-    // setDoneTasks(done);
-
-  }, []);
+  // useEffect(() => {
+  //   // setTasks(todoDummy);
+  //   setToDoTasks(todoDummy);
+  //   setInProgressTasks(inProgressDummy);
+  //   setDoneTasks(doneDummy);
+  //
+  //   // const todo = tasks.filter((task) => task.status === TaskStatus.TODO);
+  //   // setToDoTasks(todo);
+  //   //
+  //   // const inProgress = tasks.filter((task) => task.status === TaskStatus.IN_PROGRESS);
+  //   // setInProgressTasks(inProgress);
+  //   //
+  //   // const done = tasks.filter((task) => task.status === TaskStatus.DONE);
+  //   // setDoneTasks(done);
+  //
+  // }, []);
   const handleDragEnd = (res: DropResult) => {
     console.log(res);
     if (!res.destination) return;
-
     const { source, destination } = res;
     // handle card movement from one column to another
     if (source.droppableId !== destination.droppableId) {
@@ -108,13 +113,13 @@ const Board = () => {
       let sourceTasks: TaskType[];
       let destTasks: TaskType[];
       switch (sourceColumn) {
-        case "Todo":
+        case BoardColumnIDs.TODO:
           sourceTasks = toDoTasks;
           break;
-        case "In progress":
+        case BoardColumnIDs.IN_PROGRESS:
           sourceTasks = inProgressTasks;
           break;
-        case "Done":
+        case BoardColumnIDs.DONE:
           sourceTasks = doneTasks;
           break;
         default:
@@ -122,13 +127,13 @@ const Board = () => {
           break;
       }
       switch (destColumn) {
-        case "Todo":
+        case BoardColumnIDs.TODO:
           destTasks = toDoTasks;
           break;
-        case "In progress":
+        case BoardColumnIDs.IN_PROGRESS:
           destTasks = inProgressTasks;
           break;
-        case "Done":
+        case BoardColumnIDs.DONE:
           destTasks = doneTasks;
           break;
         default:
@@ -139,26 +144,26 @@ const Board = () => {
       const [removed] = sourceTasks.splice(source.index, 1);
       destTasks.splice(destination.index, 0, removed);
       switch (sourceColumn) {
-        case "Todo":
+        case BoardColumnIDs.TODO:
           setToDoTasks(sourceTasks);
           break;
-        case "In progress":
+        case BoardColumnIDs.IN_PROGRESS:
           setInProgressTasks(sourceTasks);
           break;
-        case "Done":
+        case BoardColumnIDs.DONE:
           setDoneTasks(sourceTasks);
           break;
         default:
           break;
       }
       switch (destColumn) {
-        case "Todo":
+        case BoardColumnIDs.TODO:
           setToDoTasks(destTasks);
           break;
-        case "In progress":
+        case BoardColumnIDs.IN_PROGRESS:
           setInProgressTasks(destTasks);
           break;
-        case "Done":
+        case BoardColumnIDs.DONE:
           setDoneTasks(destTasks);
           break;
         default:
@@ -167,13 +172,17 @@ const Board = () => {
 
     }
   };
+  useEffect(() => {
+    setInterval(() => {
+      console.log("todoTasksIN Board", toDoTasks);
+    }, 1000)
+  }, [])
   return (
     <div className="flex w-full h-full">
       <DragDropContext onDragEnd={handleDragEnd}>
-
-        <DroppableArea title={"Todo"} tasks={toDoTasks} />
-        <DroppableArea title={"In progress"} tasks={inProgressTasks} />
-        <DroppableArea title={"Done"} tasks={doneTasks} />
+        <DroppableArea title={"Todo"} tasks={toDoTasks} id={BoardColumnIDs.TODO}/>
+        {/*<DroppableArea title={"In progress"} tasks={inProgressTasks} id={BoardColumnIDs.IN_PROGRESS} />*/}
+        {/*<DroppableArea title={"Done"} tasks={doneTasks} id={BoardColumnIDs.DONE}/>*/}
       </DragDropContext>
     </div>
   );
