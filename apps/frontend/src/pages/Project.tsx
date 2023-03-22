@@ -54,7 +54,7 @@ export const Project = () => {
   }
 
   return (
-    <div className="flex w-full h-full mt-3">
+    <div className="w-full h-full mt-3">
       <h1 className={"text-4xl font-bold"}>
         {project?.name}
       </h1>
