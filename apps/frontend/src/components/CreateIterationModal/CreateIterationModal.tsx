@@ -6,9 +6,7 @@ interface CreateIterationModalProps {
 const CreateIterationModal = ({projectId}: CreateIterationModalProps) => {
   return (
       <div>
-        {/* The button to open modal */}
-        <label htmlFor="my-modal-3" className="btn">open modal</label>
-
+        <label htmlFor="my-modal-3" className="btn">Create iteration</label>
         {/* Put this part before </body> tag */}
         <input type="checkbox" id="my-modal-3" className="modal-toggle" />
         <div className="modal">

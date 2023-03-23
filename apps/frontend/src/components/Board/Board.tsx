@@ -61,7 +61,7 @@ const onDragEnd = (result: DropResult, columns: any, setColumns: any) => {
 const Board = () => {
     const [columns, setColumns] = useState(columnsFromBackend);
     return (
-      <div className="w-full h-full flex">
+      <div className="w-full h-full flex justify-center">
         <DragDropContext onDragEnd={(result, provided) => {
           onDragEnd(result, columns, setColumns);
         }}>
@@ -73,7 +73,7 @@ const Board = () => {
                   {(provided, snapshot) => {
                     return (
                       <div
-                        className={"w-80 bg-emerald-400"}
+                        className={"w-96 bg-slate-400 h-full mr-3 rounded-md flex flex-col items-center"}
                         {...provided.droppableProps}
                         ref={provided.innerRef}
                       >
@@ -82,7 +82,7 @@ const Board = () => {
                             <Draggable key={item.id} draggableId={item.id} index={index}>
                               {(provided, snapshot, rubric) => {
                                 return (
-                                  <div className={"w-80 h-52 bg-emerald-800 my-3"}
+                                  <div className={"w-80 h-52 bg-slate-800 my-3 rounded-md"}
                                        {...provided.draggableProps}
                                        {...provided.dragHandleProps}
                                        ref={provided.innerRef}>

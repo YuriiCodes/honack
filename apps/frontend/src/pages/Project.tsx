@@ -55,10 +55,10 @@ export const Project = () => {
 
   return (
     <div className="w-full h-full mt-3">
-      <h1 className={"text-4xl font-bold"}>
+      <h1 className={"text-4xl font-bold flex justify-center"}>
         {project?.name}
       </h1>
-      <div>
+      <div className={"text-xl flex justify-center"}>
         {project?.description}
       </div>
 
