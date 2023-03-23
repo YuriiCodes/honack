@@ -35,7 +35,7 @@ export default class Task extends Model {
   creator: User;
 
   @ForeignKey(() => User)
-  @Column
+  @Column({defaultValue: null})
   executorId: number;
 
   @HasOne(() => User, 'executorId')
