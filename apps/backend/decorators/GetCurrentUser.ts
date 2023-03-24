@@ -24,6 +24,7 @@ const GetCurrentUser = createParamDecorator(
     if (!decoded) {
       throw new UnauthorizedException('Token not found');
     }
+    console.log(decoded);
     return decoded as UserFromToken;
   }
 );

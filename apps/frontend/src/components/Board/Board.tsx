@@ -1,6 +1,8 @@
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 import { v4 as uuidv4 } from "uuid";
 import { useState } from "react";
+import { TaskStatus } from "@honack/util-shared-types";
+import TaskCard from "../TaskCard/TaskCard";
 
 
 const itemsFromBackend = [
@@ -82,11 +84,11 @@ const Board = () => {
                             <Draggable key={item.id} draggableId={item.id} index={index}>
                               {(provided, snapshot, rubric) => {
                                 return (
-                                  <div className={"w-80 h-52 bg-slate-800 my-3 rounded-md"}
+                                  <div className={"w-80 h-52  mt-2 rounded-md"}
                                        {...provided.draggableProps}
                                        {...provided.dragHandleProps}
                                        ref={provided.innerRef}>
-                                    {item.content}
+                                    <TaskCard title={item.content} description={item.content} assignedTo={"Vasya"} points={5} status={TaskStatus.IN_PROGRESS}/>
                                   </div>
                                 );
                               }}

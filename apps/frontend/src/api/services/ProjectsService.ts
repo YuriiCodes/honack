@@ -22,4 +22,6 @@ export default class ProjectsService {
   static async getProjects() {
     return await $api.get<ProjectType[]>('/project');
   }
+
+  // static async getTasks(ite)
 }

@@ -46,9 +46,10 @@ export class TaskService {
     return await this.taskModel.findByPk(id) as TaskType;
   }
 
-  async findAllByIterationId(iterationId: number): Promise<TaskType[]> {
+  async findAllByIterationId(projectId: number, iterationId: number): Promise<TaskType[]> {
     return await this.taskModel.findAll({
       where: {
+        projectId,
         iterationId
       }
     }) as TaskType[];

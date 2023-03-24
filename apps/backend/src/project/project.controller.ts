@@ -15,7 +15,7 @@ export class ProjectController {
 
   @Post()
   create(@Body() createProjectDto: CreateProjectDto, @GetCurrentUser() currentUser: UserFromToken) {
-    return this.projectService.create(createProjectDto, currentUser.sub);
+    return this.projectService.create(createProjectDto, currentUser.id);
   }
 
   @Get()
@@ -40,7 +40,7 @@ export class ProjectController {
 
   @Post("/join")
   joinProject(@Body()joinProjectDto: JoinProjectDto, @GetCurrentUser() user: UserFromToken) {
-    return this.projectService.addUserToProject(user.sub, joinProjectDto.joinCode);
+    return this.projectService.addUserToProject(user.id, joinProjectDto.joinCode);
   }
 
 }

@@ -31,7 +31,7 @@ export type DecodedToken = {
 };
 
 export type UserFromToken = {
-  sub: number;
+  id: number;
   email: string;
   iat: number;
   exp: number;
@@ -64,7 +64,7 @@ export enum TaskStatus {
   IN_PROGRESS = "IN_PROGRESS",
   DONE = "DONE",
 }
-export type TaskType = AddedByOrm & {
+export type TaskType =  {
   id: number;
   iterationId: number;
   title: string;
@@ -73,4 +73,5 @@ export type TaskType = AddedByOrm & {
   executorId: number;
   points: number;
   status: TaskStatus;
+
 }

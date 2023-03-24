@@ -24,9 +24,9 @@ export class TaskController {
     return this.taskService.findOne(id);
   }
 
-  @Get("iteration/:id")
-  findAllByIterationId(@Param("id") id: number): Promise<TaskType[]> {
-    return this.taskService.findAllByIterationId(id);
+  @Get("project/:projectId/iteration/:id")
+  findAllByIterationId(@Param("projectId") projectId: number, @Param("id") id: number): Promise<TaskType[]> {
+    return this.taskService.findAllByIterationId(projectId, id);
   }
 
   @Patch(":id")

@@ -9,7 +9,7 @@ interface TaskCardProps {
 }
 const TaskCard = ({title, description, points, assignedTo, status}: TaskCardProps) => {
   return (
-    <div className="card w-96 bg-base-100 shadow-xl my-4">
+    <div className="card bg-slate-800 shadow-xl">
       <div className="card-body">
         <h2 className="card-title">
           {title}

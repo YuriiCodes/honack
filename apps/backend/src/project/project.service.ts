@@ -39,7 +39,7 @@ export class ProjectService {
   async findAll(currentUser: UserFromToken): Promise<ProjectType[]> {
     const userProjects = await this.usersProjectsModel.findAll({
       where: {
-        userId: currentUser.sub
+        userId: currentUser.id
       }
     });
     const projectIds = userProjects.map(userProject => userProject.projectId);
