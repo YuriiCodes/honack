@@ -54,12 +54,7 @@ export class AuthService {
       username: createUserDto.username,
       password: hashedPassword,
     })
-    return await this.login({
-      email: createdUser.email,
-      password: createUserDto.password,
-      username: createUserDto.username,
-      _id: createdUser.id,
-    });
+    return createdUser.email;
   }
 
   findAll() {

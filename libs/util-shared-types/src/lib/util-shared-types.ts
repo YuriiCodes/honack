@@ -73,5 +73,4 @@ export type TaskType =  {
   executorId: number;
   points: number;
   status: TaskStatus;
-
 }

@@ -20,6 +20,8 @@ export class ProjectController {
 
   @Get()
   findAll(@GetCurrentUser() currentUser: UserFromToken) {
+    console.log("GET ALL PROJECTS")
+    console.log(currentUser)
     return this.projectService.findAll(currentUser);
   }
 
