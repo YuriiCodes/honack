@@ -35,6 +35,9 @@ export const Project = () => {
       const response = await ProjectsService.getProjectById(id);
       if (response.status === 200) {
         setProject(response.data);
+        if (response.data.iterations && response.data.iterations.length > 0) {
+          setCurrentIterationId(response.data.iterations[0].id);
+        }
       }
     } catch (e: unknown | AxiosError) {
       // check if this is axios error
@@ -74,19 +77,22 @@ export const Project = () => {
       </div>
 
       {project.iterations && project.iterations.length > 0 && (
-        <div className={"flex justify-center m-5"}>
-          <span className={"w-96"}>Please, select the iteration:</span>
-          <select className="select w-full max-w-xs"
-                  onChange={(e) => {
-                    setCurrentIterationId(+e.target.value);
-                  }}
-          >
-            {project.iterations.map((iteration) => (
-              <option key={iteration.id} value={iteration.id}>
-                {iteration.name}
-              </option>
-            ))}
-          </select>
+        <div className={"flex justify-center m-5 items-center"}>
+          <span className={"mr-7"}>Please, select the iteration:</span>
+          <div className={"border-2 border-slate-400 rounded-sm mr-7"}>
+            <select className="select w-full max-w-xs"
+                    onChange={(e) => {
+                      setCurrentIterationId(+e.target.value);
+                    }}
+            >
+              {project.iterations.map((iteration) => (
+                <option key={iteration.id} value={iteration.id}>
+                  {iteration.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <CreateIterationModal projectId={+id} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
         </div>
       )}
 
@@ -101,7 +107,7 @@ export const Project = () => {
             <div className={"my-2 w-full"}> Create an iteration to start adding tasks<span
               aria-label={"pointing down emoji"}> 👇</span></div>
             <div className={"my-2"}>
-              <CreateIterationModal projectId={+id} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
+              <CreateIterationModal projectId={+id} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
             </div>
           </div>
         </div>

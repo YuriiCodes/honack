@@ -105,7 +105,7 @@ const Board = () => {
                     );
                   }}
                 </Droppable>
-                <AddTaskForm />
+                { (column.name === "To Do") && <AddTaskForm />}
               </div>
             );
           })}

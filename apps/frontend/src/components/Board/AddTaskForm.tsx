@@ -1,15 +1,13 @@
 import { useIterationStore } from "../../stores/IterationStore";
-import { useEffect } from "react";
 
 const AddTaskForm = () => {
   const currentIterationId = useIterationStore((state) => state.currentIterationId);
 
   return (
-    <div onClick={() => {
+    <div className={'btn'} onClick={() => {
       console.log(currentIterationId);}
     }>
-      Add task
-      {currentIterationId}
+      Add new task {currentIterationId}
     </div>
   )
 }

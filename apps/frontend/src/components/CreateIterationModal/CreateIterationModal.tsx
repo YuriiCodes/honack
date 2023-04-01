@@ -10,7 +10,7 @@ const CreateIterationModal = ({projectId, isModalOpen, setIsModalOpen}: CreateIt
       <div>
         <label htmlFor="my-modal-3" className="btn w-full" onClick={() => {
           setIsModalOpen(true);
-        }}>Create iteration</label>
+        }}>Create new iteration</label>
         {/* Put this part before </body> tag */}
         <input type="checkbox" id="my-modal-3" className="modal-toggle"  checked={isModalOpen}/>
         <div className="modal">
