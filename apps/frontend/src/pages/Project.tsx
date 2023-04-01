@@ -64,26 +64,29 @@ export const Project = () => {
 
   return (
     <div className="w-full h-full mt-3">
-      <h1 className={"text-4xl font-bold flex justify-center"}>
+      <h1 className={"text-4xl m-5 flex justify-center"}>
         {project?.name}
       </h1>
       <div className={"text-xl flex justify-center"}>
         {project?.description}
       </div>
 
-      <div className={"flex justify-center"}>
+      <div className={"flex justify-center m-5"}>
         {(project.iterations && project.iterations.length > 0) && (
-          <select className="select w-full max-w-xs"
-                  onChange={(e) => {
-                    setCurrentIterationId(+e.target.value);
-                  }}
-          >
-            {project.iterations.map((iteration) => (
-              <option key={iteration.id} value={iteration.id}>
-                {iteration.name}
-              </option>
-            ))}
-          </select>
+          <div className={"flex align-middle"}>
+            <span className={"w-96"}>Please, select the iteration:</span>
+            <select className="select w-full max-w-xs"
+                    onChange={(e) => {
+                      setCurrentIterationId(+e.target.value);
+                    }}
+            >
+              {project.iterations.map((iteration) => (
+                <option key={iteration.id} value={iteration.id}>
+                  {iteration.name}
+                </option>
+              ))}
+            </select>
+          </div>
         )}
       </div>
 

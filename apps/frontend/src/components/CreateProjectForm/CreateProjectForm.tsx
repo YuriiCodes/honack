@@ -3,6 +3,7 @@ import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import axios, { AxiosError } from "axios";
 import ProjectsService from "../../api/services/ProjectsService";
+import { useNavigate } from "react-router-dom";
 
 const CreateProjectSchema = Yup.object().shape({
   name: Yup.string()
@@ -12,6 +13,7 @@ const CreateProjectSchema = Yup.object().shape({
   description: Yup.string().min(50, "Too short").max(1000, "Too long").required("Required")
 });
 export const CreateProjectForm = () => {
+  const navigate = useNavigate();
   return (
     <Formik
       initialValues={{
@@ -23,7 +25,8 @@ export const CreateProjectForm = () => {
         try {
           const response = await ProjectsService.createProject(values.name, values.description);
           if (response.status === 201) {
-            enqueueSnackbar("Project created", { variant: "success" });
+            enqueueSnackbar("Project created", { variant: "success", autoHideDuration: 2000 });
+            navigate("/projects");
             return;
           }
 
