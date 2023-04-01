@@ -73,7 +73,7 @@ export const Project = () => {
         {project?.description}
       </div>
 
-      {(project.iterations && project.iterations.length > 0) ? (
+      {project.iterations && project.iterations.length > 0 && (
         <div className={"flex justify-center m-5"}>
           <span className={"w-96"}>Please, select the iteration:</span>
           <select className="select w-full max-w-xs"
@@ -87,6 +87,11 @@ export const Project = () => {
               </option>
             ))}
           </select>
+        </div>
+      )}
+
+      {(project.iterations && project.iterations.length > 0) ? (
+        <div className={"flex justify-center m-5"}>
           <Board />
         </div>
       ) : (
