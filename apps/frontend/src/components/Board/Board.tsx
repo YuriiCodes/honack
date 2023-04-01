@@ -3,12 +3,14 @@ import { v4 as uuidv4 } from "uuid";
 import { useState } from "react";
 import { TaskStatus } from "@honack/util-shared-types";
 import TaskCard from "../TaskCard/TaskCard";
+import AddTaskForm from "./AddTaskForm";
 
 
 const itemsFromBackend = [
   { id: uuidv4(), content: "First task" },
   { id: uuidv4(), content: "Second task" },
   { id: uuidv4(), content: "Third task" }
+
 ];
 const columnsFromBackend = {
   [uuidv4()]: {
@@ -60,6 +62,8 @@ const onDragEnd = (result: DropResult, columns: any, setColumns: any) => {
     });
   }
 };
+
+
 const Board = () => {
     const [columns, setColumns] = useState(columnsFromBackend);
     return (
@@ -69,7 +73,7 @@ const Board = () => {
         }}>
           {Object.entries(columns).map(([id, column]) => {
             return (
-              <div className={"h-full"}>
+              <div className={"h-2/3"}>
                 <h2 className={"text-xl"}>{column.name}</h2>
                 <Droppable droppableId={id} key={id}>
                   {(provided, snapshot) => {
@@ -88,7 +92,8 @@ const Board = () => {
                                        {...provided.draggableProps}
                                        {...provided.dragHandleProps}
                                        ref={provided.innerRef}>
-                                    <TaskCard title={item.content} description={item.content} assignedTo={"Vasya"} points={5} status={TaskStatus.IN_PROGRESS}/>
+                                    <TaskCard title={item.content} description={item.content} assignedTo={"Vasya"}
+                                              points={5} status={TaskStatus.IN_PROGRESS} />
                                   </div>
                                 );
                               }}
@@ -100,12 +105,14 @@ const Board = () => {
                     );
                   }}
                 </Droppable>
+                <AddTaskForm />
               </div>
             );
           })}
         </DragDropContext>
       </div>
-    );
+    )
+      ;
   }
 ;
 

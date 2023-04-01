@@ -2,7 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/commo
 import { TaskService } from "./task.service";
 import { CreateTaskDto } from "./dto/create-task.dto";
 import { UpdateTaskDto } from "./dto/update-task.dto";
-import { TaskType } from "@honack/util-shared-types";
+import { TaskType, UserFromToken } from "@honack/util-shared-types";
+import GetCurrentUser from "../../decorators/GetCurrentUser";
 
 @Controller("task")
 export class TaskController {
@@ -10,8 +11,8 @@ export class TaskController {
   }
 
   @Post()
-  create(@Body() createTaskDto: CreateTaskDto): Promise<TaskType> {
-    return this.taskService.create(createTaskDto);
+  create(@Body() createTaskDto: CreateTaskDto, @GetCurrentUser() user: UserFromToken): Promise<TaskType> {
+    return this.taskService.create(createTaskDto, user);
   }
 
   @Get()

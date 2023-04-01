@@ -13,9 +13,6 @@ export class CreateTaskDto {
 
   @IsNotEmpty()
   @Type(() => Number)
-  creatorId: number;
-  @IsNotEmpty()
-  @Type(() => Number)
   executorId: number;
   @IsNotEmpty()
   @Type(() => Number)

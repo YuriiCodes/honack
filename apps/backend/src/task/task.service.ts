@@ -5,7 +5,7 @@ import { InjectModel } from "@nestjs/sequelize";
 import Task from "../../models/Task.entity";
 import { IterationService } from "../iteration/iteration.service";
 import { AuthService } from "../auth/auth.service";
-import { TaskType } from "@honack/util-shared-types";
+import { TaskType, UserFromToken } from "@honack/util-shared-types";
 
 @Injectable()
 export class TaskService {
@@ -16,7 +16,7 @@ export class TaskService {
   }
 
 
-  async create(createTaskDto: CreateTaskDto): Promise<TaskType> {
+  async create(createTaskDto: CreateTaskDto, user: UserFromToken): Promise<TaskType> {
     // check if the with given iterationId  exists:
     await this.iterationService.checkIfIterationExists(createTaskDto.iterationId);
 
@@ -24,17 +24,18 @@ export class TaskService {
     await this.authService.checkIfUserExists(createTaskDto.executorId);
 
     // check if task creator with given id exists:
-    await this.authService.checkIfUserExists(createTaskDto.creatorId);
+    await this.authService.checkIfUserExists(user.id);
 
     // check if task executor belongs to the project:
     await this.iterationService.checkIfUserBelongsToProject(createTaskDto.executorId, createTaskDto.iterationId);
 
     // check if task creator belongs to the project:
-    await this.iterationService.checkIfUserBelongsToProject(createTaskDto.creatorId, createTaskDto.iterationId);
+    await this.iterationService.checkIfUserBelongsToProject(user.id, createTaskDto.iterationId);
 
 
     return await this.taskModel.create({
-      ...createTaskDto
+      ...createTaskDto,
+      creatorId: user.id
     }) as TaskType;
   }
 

@@ -7,12 +7,16 @@ import { useAllProjectsStore } from "../stores/AllProjectsStore";
 import { ProjectType, TaskType } from "@honack/util-shared-types";
 import CreateIterationModal from "../components/CreateIterationModal/CreateIterationModal";
 import Board from "../components/Board/Board";
+import { useIterationStore } from "../stores/IterationStore";
 
 export const Project = () => {
   const { id } = useParams();
   const getProjectById = useAllProjectsStore((state) => state.getProjectById);
   const [project, setProject] = useState<ProjectType | undefined>(undefined);
   const [tasks, setTasks] = useState<TaskType[] | undefined>(undefined);
+
+
+  const setCurrentIterationId = useIterationStore((state) => state.setCurrentIterationId);
 
   async function getProject(id: string | undefined) {
     if (!id) return;
@@ -42,13 +46,13 @@ export const Project = () => {
       enqueueSnackbar("Something went wrong", { variant: "error" });
     }
   }
+
   useEffect(() => {
     getProject(id);
   }, []);
 
-  async function fetchTasks (id: string | undefined) {
+  async function fetchTasks(id: string | undefined) {
     if (!id) return;
-
   }
 
   if (!project) {
@@ -69,7 +73,11 @@ export const Project = () => {
 
       <div className={"flex justify-center"}>
         {(project.iterations && project.iterations.length > 0) && (
-          <select className="select w-full max-w-xs">
+          <select className="select w-full max-w-xs"
+                  onChange={(e) => {
+                    setCurrentIterationId(+e.target.value);
+                  }}
+          >
             {project.iterations.map((iteration) => (
               <option key={iteration.id} value={iteration.id}>
                 {iteration.name}
@@ -85,7 +93,8 @@ export const Project = () => {
         <div className="text-2xl flex justify-center mt-5">
           <div className={"flex flex-col"}>
             <div className={"my-2"}> No iterations found</div>
-            <div className={"my-2"}> Create an iteration to start adding tasks<span aria-label={"pointing down emoji"}> 👇</span></div>
+            <div className={"my-2"}> Create an iteration to start adding tasks<span
+              aria-label={"pointing down emoji"}> 👇</span></div>
             <div className={"my-2"}>
               {/*TODO: add auto-state update & modal close when the iteration is created */}
               <CreateIterationModal projectId={+id} />
