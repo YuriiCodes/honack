@@ -1,4 +1,4 @@
-import CreateIterationForm from "../CreateIterationForm/CreateIterationForm";
+import CreateIterationForm from "./CreateIterationForm";
 
 interface CreateIterationModalProps {
   projectId: number;

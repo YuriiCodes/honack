@@ -4,8 +4,8 @@ import ProjectsService from "../api/services/ProjectsService";
 import axios, { AxiosError } from "axios";
 import { enqueueSnackbar } from "notistack";
 import { useAllProjectsStore } from "../stores/AllProjectsStore";
-import { ProjectType, TaskType } from "@honack/util-shared-types";
-import CreateIterationModal from "../components/CreateIterationModal/CreateIterationModal";
+import { ProjectType } from "@honack/util-shared-types";
+import CreateIterationModal from "../components/CreateIterationForm/CreateIterationModal";
 import Board from "../components/Board/Board";
 import { useIterationStore } from "../stores/IterationStore";
 
@@ -14,11 +14,13 @@ export const Project = () => {
   const getProjectById = useAllProjectsStore((state) => state.getProjectById);
   const [project, setProject] = useState<ProjectType | undefined>(undefined);
   const setCurrentIterationId = useIterationStore((state) => state.setCurrentIterationId);
+  const currentIterationId = useIterationStore((state) => state.currentIterationId);
 
   // state pieces for the 'create iteration' modal.
   // We pass isModalOpen to a dependency array of useEffect,
   // so that when it changes, we will re-fetch the project and its iterations.
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false);
 
   async function getProject(id: string | undefined) {
     if (!id) return;
@@ -98,7 +100,7 @@ export const Project = () => {
 
       {(project.iterations && project.iterations.length > 0) ? (
         <div className={"flex justify-center m-5"}>
-          <Board />
+          <Board isCreateTaskModalOpen={isCreateTaskModalOpen} setIsCreateTaskModalOpen={setIsCreateTaskModalOpen}/>
         </div>
       ) : (
         <div className="text-2xl flex justify-center mt-5">

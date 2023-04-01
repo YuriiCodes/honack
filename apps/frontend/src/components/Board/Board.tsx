@@ -1,9 +1,9 @@
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 import { v4 as uuidv4 } from "uuid";
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import { TaskStatus } from "@honack/util-shared-types";
 import TaskCard from "../TaskCard/TaskCard";
-import AddTaskForm from "./AddTaskForm";
+import CreateTaskModal from "../CreateTaskForm/CreateTaskModal";
 
 
 const itemsFromBackend = [
@@ -64,8 +64,13 @@ const onDragEnd = (result: DropResult, columns: any, setColumns: any) => {
 };
 
 
-const Board = () => {
+type BoardProps = {
+  isCreateTaskModalOpen: boolean
+  setIsCreateTaskModalOpen: React.Dispatch<SetStateAction<boolean>>
+}
+const Board = ({ isCreateTaskModalOpen, setIsCreateTaskModalOpen }: BoardProps) => {
     const [columns, setColumns] = useState(columnsFromBackend);
+
     return (
       <div className="w-full h-full flex justify-center">
         <DragDropContext onDragEnd={(result, provided) => {
@@ -105,7 +110,8 @@ const Board = () => {
                     );
                   }}
                 </Droppable>
-                { (column.name === "To Do") && <AddTaskForm />}
+                {(column.name === "To Do") && <CreateTaskModal isCreateTaskModalOpen={isCreateTaskModalOpen}
+                                                               setIsCreateTaskModalOpen={setIsCreateTaskModalOpen} />}
               </div>
             );
           })}
