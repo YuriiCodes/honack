@@ -1,9 +1,9 @@
 import * as Yup from "yup";
 import { Field, Form, Formik } from "formik";
-import ProjectsService from "../../api/services/ProjectsService";
 import { enqueueSnackbar } from "notistack";
 import axios, { AxiosError } from "axios";
 import IterationService from "../../api/services/IterationService";
+import React from "react";
 
 const CreateIterationSchema = Yup.object().shape({
   name: Yup.string()
@@ -15,9 +15,11 @@ const CreateIterationSchema = Yup.object().shape({
 
 interface CreateIterationFormProps {
   projectId: number;
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+
 }
 
-const CreateIterationForm = ({ projectId }: CreateIterationFormProps) => {
+const CreateIterationForm = ({ projectId, setIsModalOpen }: CreateIterationFormProps) => {
   return (
     <Formik
       initialValues={{
@@ -30,7 +32,8 @@ const CreateIterationForm = ({ projectId }: CreateIterationFormProps) => {
         try {
           const response = await IterationService.createIteration(projectId, values.name, values.description);
           if (response.status === 201) {
-            enqueueSnackbar("Iteration created", { variant: "success" });
+            enqueueSnackbar("Iteration created", { variant: "success", autoHideDuration: 2000 });
+            setIsModalOpen(false);
             return;
           }
 
