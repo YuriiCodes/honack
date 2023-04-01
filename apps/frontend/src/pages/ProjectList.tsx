@@ -31,13 +31,20 @@ const ProjectList = () => {
     fetchProjects();
   }, []);
   return (
-    <div className={"flex w-full h-full mt-3"}>
-      {projects.map((project) => (
-        <div>
-          <Link to={`/project/${project.id}`}><h1 key={project.id}>Name: {project.name}</h1> </Link>
-          <div>Description: {project.description}</div>
-        </div>
-      ))}
+    <div className={"flex w-full h-full m-3 justify-center"}>
+      <ul>
+        <h1 className={"text-4xl mb-3"}>
+          All your projects
+        </h1>
+        {projects.map((project) => (
+          <li key={project.id} className={"p-4 bg-slate-600 hover:bg-slate-700 active:bg-slate-800 rounded-md shadow-md"}>
+            <Link to={`/project/${project.id}`}>
+              <p className={"text-xl"}>{project.name}</p>
+              <div>{project.description}</div>
+            </Link>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
