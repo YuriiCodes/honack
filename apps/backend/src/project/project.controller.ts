@@ -45,4 +45,8 @@ export class ProjectController {
     return this.projectService.addUserToProject(user.id, joinProjectDto.joinCode);
   }
 
+  @Get("/:id/members")
+  getMembers(@Param("id") id: string, @GetCurrentUser() user: UserFromToken) {
+    return this.projectService.getMembers(+id, user.id);
+  }
 }

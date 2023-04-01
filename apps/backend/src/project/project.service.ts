@@ -7,13 +7,17 @@ import { ProjectType, UserFromToken } from "@honack/util-shared-types";
 import UsersProjects from "../../models/UsersProjects";
 import { v4 as uuidv4 } from "uuid";
 import Iteration from "../../models/Iteration.entity";
+import User from "../../models/User.entity";
 
 @Injectable()
 export class ProjectService {
   constructor(@InjectModel(Project)
               private projectModel: typeof Project,
               @InjectModel(UsersProjects)
-              private usersProjectsModel: typeof UsersProjects
+              private usersProjectsModel: typeof UsersProjects,
+
+              @InjectModel(User)
+              private user: typeof User
   ) {
   }
 
@@ -128,6 +132,26 @@ export class ProjectService {
       userId,
       projectId: project.id
     });
+  }
 
+  async getMembers(projectId: number, userId: number) {
+    await this.checkIfUserBelongsToProject(userId, projectId);
+
+    const usersProjects = await this.usersProjectsModel.findAll({
+      where: {
+        projectId
+      }
+    });
+
+    const userIds = usersProjects.map(userProject => userProject.userId);
+
+    return await this.user.findAll({
+      where: {
+        id: userIds,
+      },
+      attributes: {
+        exclude: ["password"]
+      }
+    })
   }
 }
