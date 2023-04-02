@@ -20,4 +20,8 @@ export class CreateTaskDto {
   @IsNotEmpty()
   @Type(() => Number)
   iterationId: number;
+
+  @IsNotEmpty()
+  @Type(() => Number)
+  projectId: number;
 }

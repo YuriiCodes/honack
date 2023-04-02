@@ -1,7 +1,7 @@
-import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
+import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
 import { v4 as uuidv4 } from "uuid";
-import { SetStateAction, useState } from "react";
-import { TaskStatus } from "@honack/util-shared-types";
+import { SetStateAction, useEffect, useState } from "react";
+import { TaskStatus, TaskType } from "@honack/util-shared-types";
 import TaskCard from "../TaskCard/TaskCard";
 import CreateTaskModal from "../CreateTaskForm/CreateTaskModal";
 import { useTaskStore } from "../../stores/TaskStore";
@@ -11,22 +11,30 @@ const itemsFromBackend = [
   { id: uuidv4(), content: "First task" },
   { id: uuidv4(), content: "Second task" },
   { id: uuidv4(), content: "Third task" }
-
 ];
-const columnsFromBackend = {
-  [uuidv4()]: {
-    name: "To Do",
-    items: itemsFromBackend
+const itemsFromBackend2: TaskType[] = [
+  {
+    id: 1,
+    iterationId: 1,
+    points: 12,
+    title: "task 1",
+    description: "Task 1 descr",
+    status: TaskStatus.TODO,
+    creatorId: 1,
+    executorId: 1
   },
-  [uuidv4()]: {
-    name: "In Progress",
-    items: []
-  },
-  [uuidv4()]: {
-    name: "Done",
-    items: []
+  {
+    id: 2,
+    iterationId: 1,
+    points: 5,
+    title: "Task 1fffff",
+    description: "JFGUIHiuahuifiuhfuehafhesuihfueshfuieshufhueshfuihesuhf",
+    status: TaskStatus.TODO,
+    creatorId: 1,
+    executorId: 1
   }
-};
+];
+
 
 const onDragEnd = (result: DropResult, columns: any, setColumns: any) => {
   if (!result.destination) return;
@@ -71,9 +79,30 @@ type BoardProps = {
 }
 const Board = ({ isCreateTaskModalOpen, setIsCreateTaskModalOpen }: BoardProps) => {
     const tasks = useTaskStore(state => state.tasks);
-    console.log("tasks")
-  console.log(tasks)
+    console.log("tasks");
+    console.log(tasks);
+
+    const columnsFromBackend = {
+      [uuidv4()]: {
+        name: "To Do",
+        items: tasks,
+      },
+      [uuidv4()]: {
+        name: "In Progress",
+        items: []
+      },
+      [uuidv4()]: {
+        name: "Done",
+        items: []
+      }
+    };
+
+
     const [columns, setColumns] = useState(columnsFromBackend);
+
+    useEffect(() => {
+      setColumns(columnsFromBackend);
+    }, [tasks]);
 
     return (
       <div className="w-full h-full flex justify-center">
@@ -94,14 +123,14 @@ const Board = ({ isCreateTaskModalOpen, setIsCreateTaskModalOpen }: BoardProps) 
                       >
                         {column.items.map((item, index) => {
                           return (
-                            <Draggable key={item.id} draggableId={item.id} index={index}>
+                            <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
                               {(provided, snapshot, rubric) => {
                                 return (
                                   <div className={"w-80 h-52  mt-2 rounded-md"}
                                        {...provided.draggableProps}
                                        {...provided.dragHandleProps}
                                        ref={provided.innerRef}>
-                                    <TaskCard title={item.content} description={item.content} assignedTo={"Vasya"}
+                                    <TaskCard title={item.title} description={item.description} assignedTo={"Vasya"}
                                               points={5} status={TaskStatus.IN_PROGRESS} />
                                   </div>
                                 );

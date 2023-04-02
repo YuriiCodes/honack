@@ -132,8 +132,10 @@ export const Project = () => {
   useEffect(() => {
     getTasks(currentProjectId, currentIterationId);
     // clean up function
-
-  }, [currentIterationId]);
+    return () => {
+      setTasks([]);
+    }
+  }, [currentIterationId, isCreateTaskModalOpen]);
 
   if (!project) {
     return <div>Loading...</div>;

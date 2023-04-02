@@ -27,10 +27,10 @@ export class TaskService {
     await this.authService.checkIfUserExists(user.id);
 
     // check if task executor belongs to the project:
-    await this.iterationService.checkIfUserBelongsToProject(createTaskDto.executorId, createTaskDto.iterationId);
+    await this.iterationService.checkIfUserBelongsToProject(createTaskDto.executorId, createTaskDto.projectId);
 
     // check if task creator belongs to the project:
-    await this.iterationService.checkIfUserBelongsToProject(user.id, createTaskDto.iterationId);
+    await this.iterationService.checkIfUserBelongsToProject(user.id, createTaskDto.projectId);
 
 
     return await this.taskModel.create({

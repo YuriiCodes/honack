@@ -7,14 +7,16 @@ export default class TaskService {
     description: string,
     points: number,
     executorId: number,
-    iterationId: number
+    iterationId: number,
+    projectId: number
   ) {
     return await $api.post(`/task`, {
       title,
       description,
       points,
       executorId,
-      iterationId
+      iterationId,
+      projectId,
     });
   }
 

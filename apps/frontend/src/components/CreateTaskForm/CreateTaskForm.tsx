@@ -44,10 +44,10 @@ const CreateTaskForm = ({ setIsModalOpen }: CreateTaskFormProps) => {
       validationSchema={CreateTaskSchema}
       onSubmit={async values => {
         try {
-          if (!currentIterationId) {
+          if (!currentIterationId || !currentProjectId) {
             return;
           }
-          const response = await TaskService.createTask(values.title, values.description, values.points, values.executorId, currentIterationId);
+          const response = await TaskService.createTask(values.title, values.description, values.points, Number(values.executorId), currentIterationId, currentProjectId);
           if (response.status === 201) {
             enqueueSnackbar("Task created", { variant: "success", autoHideDuration: 2000 });
             setIsModalOpen(false);
