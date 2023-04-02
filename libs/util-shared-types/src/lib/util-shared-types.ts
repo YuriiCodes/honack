@@ -1,3 +1,5 @@
+import { OmitType } from "@nestjs/mapped-types";
+
 export function utilSharedTypes(): string {
   return 'util-shared-types';
 }
@@ -12,6 +14,8 @@ export interface DomainUser {
   email: string;
   password: string;
 }
+
+export type DomainUserWithoutPassword = Omit<DomainUser, 'password'>;
 
 export interface TokenPayload {
   id: number;

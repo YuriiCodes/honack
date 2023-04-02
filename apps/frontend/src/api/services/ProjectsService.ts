@@ -1,5 +1,5 @@
 import $api from "../http";
-import { ProjectType } from "@honack/util-shared-types";
+import { DomainUserWithoutPassword, ProjectType } from "@honack/util-shared-types";
 
 export default class ProjectsService {
   static async createProject(name:string, description:string) {
@@ -23,5 +23,7 @@ export default class ProjectsService {
     return await $api.get<ProjectType[]>('/project');
   }
 
-  // static async getTasks(ite)
+  static async getProjectMembers(id: string) {
+    return await $api.get<DomainUserWithoutPassword[]>(`/project/${id}/members`);
+  }
 }

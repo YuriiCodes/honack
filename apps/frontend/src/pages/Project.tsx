@@ -58,6 +58,7 @@ export const Project = () => {
     getProject(id);
   }, [isModalOpen]);
 
+  //TODO: add effect that fetches all the tasks based on the current iteration.
   async function fetchTasks(id: string | undefined) {
     if (!id) return;
   }

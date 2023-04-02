@@ -3,7 +3,7 @@ import { CreateProjectDto } from "./dto/create-project.dto";
 import { UpdateProjectDto } from "./dto/update-project.dto";
 import { InjectModel } from "@nestjs/sequelize";
 import Project from "../../models/Project.entity";
-import { ProjectType, UserFromToken } from "@honack/util-shared-types";
+import { DomainUserWithoutPassword, ProjectType, UserFromToken } from "@honack/util-shared-types";
 import UsersProjects from "../../models/UsersProjects";
 import { v4 as uuidv4 } from "uuid";
 import Iteration from "../../models/Iteration.entity";
@@ -134,7 +134,7 @@ export class ProjectService {
     });
   }
 
-  async getMembers(projectId: number, userId: number) {
+  async getMembers(projectId: number, userId: number): Promise<DomainUserWithoutPassword[]> {
     await this.checkIfUserBelongsToProject(userId, projectId);
 
     const usersProjects = await this.usersProjectsModel.findAll({
@@ -152,6 +152,6 @@ export class ProjectService {
       attributes: {
         exclude: ["password"]
       }
-    })
+    }) as DomainUserWithoutPassword[];
   }
 }
