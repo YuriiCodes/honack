@@ -5,7 +5,6 @@ export default class TaskService {
     title: string,
     description: string,
     points: number,
-    creatorId: number,
     executorId: number,
     iterationId: number
   ) {
@@ -13,7 +12,6 @@ export default class TaskService {
       title,
       description,
       points,
-      creatorId,
       executorId,
       iterationId
     });

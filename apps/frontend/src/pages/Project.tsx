@@ -10,11 +10,19 @@ import Board from "../components/Board/Board";
 import { useIterationStore } from "../stores/IterationStore";
 
 export const Project = () => {
+  const setCurrentProjectId = useAllProjectsStore((state) => state.setCurrentProjectId);
   const { id } = useParams();
+
+
   const getProjectById = useAllProjectsStore((state) => state.getProjectById);
+
+
   const [project, setProject] = useState<ProjectType | undefined>(undefined);
   const setCurrentIterationId = useIterationStore((state) => state.setCurrentIterationId);
-  const currentIterationId = useIterationStore((state) => state.currentIterationId);
+
+
+  const addProjectUsers = useAllProjectsStore((state) => state.addProjectUsers);
+
 
   // state pieces for the 'create iteration' modal.
   // We pass isModalOpen to a dependency array of useEffect,
@@ -53,10 +61,36 @@ export const Project = () => {
       enqueueSnackbar("Something went wrong", { variant: "error" });
     }
   }
-
   useEffect(() => {
     getProject(id);
   }, [isModalOpen]);
+
+  async function getProjectUsers(id: string | undefined) {
+    if (!id) return;
+    try {
+      const response = await ProjectsService.getProjectMembers(id);
+      if (response.status === 200) {
+        const users = response.data;
+        addProjectUsers({
+          projectId: +id,
+          users,
+        });
+      }
+    } catch (e: unknown | AxiosError) {
+      // check if this is axios error
+      if (axios.isAxiosError(e)) {
+        if (e.response?.status === 404) {
+          enqueueSnackbar("Project with given ID is not found", { variant: "error" });
+          return;
+        }
+      }
+      // Unknown error
+      enqueueSnackbar("Something went wrong", { variant: "error" });
+    }
+  }
+  useEffect(() => {
+    getProjectUsers(id);
+  }, []);
 
   //TODO: add effect that fetches all the tasks based on the current iteration.
   async function fetchTasks(id: string | undefined) {
@@ -69,6 +103,8 @@ export const Project = () => {
   if (!id) {
     return <div>Project ID is not provided</div>;
   }
+
+  setCurrentProjectId(+id);
 
   return (
     <div className="w-full h-full mt-3">

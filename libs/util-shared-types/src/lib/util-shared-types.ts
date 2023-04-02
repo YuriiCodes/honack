@@ -1,5 +1,3 @@
-import { OmitType } from "@nestjs/mapped-types";
-
 export function utilSharedTypes(): string {
   return 'util-shared-types';
 }
@@ -77,4 +75,9 @@ export type TaskType =  {
   executorId: number;
   points: number;
   status: TaskStatus;
+}
+
+export type ProjectUsersType = {
+  projectId: number;
+  users: DomainUserWithoutPassword[];
 }
