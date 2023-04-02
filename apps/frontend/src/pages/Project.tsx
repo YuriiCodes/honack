@@ -8,27 +8,34 @@ import { ProjectType } from "@honack/util-shared-types";
 import CreateIterationModal from "../components/CreateIterationForm/CreateIterationModal";
 import Board from "../components/Board/Board";
 import { useIterationStore } from "../stores/IterationStore";
+import TaskService from "../api/services/TaskService";
+import { useTaskStore } from "../stores/TaskStore";
 
 export const Project = () => {
-  const setCurrentProjectId = useAllProjectsStore((state) => state.setCurrentProjectId);
   const { id } = useParams();
-
+  const currentProjectId = useAllProjectsStore((state) => state.currentProjectId);
+  const setCurrentProjectId = useAllProjectsStore((state) => state.setCurrentProjectId);
 
   const getProjectById = useAllProjectsStore((state) => state.getProjectById);
-
-
-  const [project, setProject] = useState<ProjectType | undefined>(undefined);
+  const currentIterationId = useIterationStore((state) => state.currentIterationId);
   const setCurrentIterationId = useIterationStore((state) => state.setCurrentIterationId);
-
-
   const addProjectUsers = useAllProjectsStore((state) => state.addProjectUsers);
-
-
+  const setTasks = useTaskStore(state => state.setTasks);
+  const [project, setProject] = useState<ProjectType | undefined>(undefined);
   // state pieces for the 'create iteration' modal.
   // We pass isModalOpen to a dependency array of useEffect,
   // so that when it changes, we will re-fetch the project and its iterations.
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false);
+
+
+  // effect that sets the current project id in the store
+  useEffect(() => {
+    if (!id) {
+      return;
+    }
+    setCurrentProjectId(+id);
+  }, []);
 
   async function getProject(id: string | undefined) {
     if (!id) return;
@@ -61,6 +68,8 @@ export const Project = () => {
       enqueueSnackbar("Something went wrong", { variant: "error" });
     }
   }
+
+  // effect that gets the project and its iterations
   useEffect(() => {
     getProject(id);
   }, [isModalOpen]);
@@ -73,7 +82,7 @@ export const Project = () => {
         const users = response.data;
         addProjectUsers({
           projectId: +id,
-          users,
+          users
         });
       }
     } catch (e: unknown | AxiosError) {
@@ -88,14 +97,43 @@ export const Project = () => {
       enqueueSnackbar("Something went wrong", { variant: "error" });
     }
   }
+
+  // effect that gets all the users for the project
   useEffect(() => {
     getProjectUsers(id);
   }, []);
 
+
   //TODO: add effect that fetches all the tasks based on the current iteration.
-  async function fetchTasks(id: string | undefined) {
-    if (!id) return;
+  async function getTasks(projectId: number | null, iterationId: number | null) {
+    console.log("getTasks");
+    console.log(projectId, iterationId);
+    if (!projectId || !iterationId) return;
+
+    try {
+      const response = await TaskService.getTasksByIterationId(iterationId);
+      if (response.status === 200) {
+        const tasks = response.data;
+        setTasks(tasks);
+      }
+    } catch (e: unknown | AxiosError) {
+      // check if this is axios error
+      if (axios.isAxiosError(e)) {
+        if (e.response?.status === 404) {
+          enqueueSnackbar("Tasks for the given ID is not found", { variant: "error" });
+          return;
+        }
+      }
+      // Unknown error
+      enqueueSnackbar("Something went wrong", { variant: "error" });
+    }
   }
+
+  useEffect(() => {
+    getTasks(currentProjectId, currentIterationId);
+    // clean up function
+
+  }, [currentIterationId]);
 
   if (!project) {
     return <div>Loading...</div>;
@@ -103,8 +141,6 @@ export const Project = () => {
   if (!id) {
     return <div>Project ID is not provided</div>;
   }
-
-  setCurrentProjectId(+id);
 
   return (
     <div className="w-full h-full mt-3">
@@ -137,7 +173,7 @@ export const Project = () => {
 
       {(project.iterations && project.iterations.length > 0) ? (
         <div className={"flex justify-center m-5"}>
-          <Board isCreateTaskModalOpen={isCreateTaskModalOpen} setIsCreateTaskModalOpen={setIsCreateTaskModalOpen}/>
+          <Board isCreateTaskModalOpen={isCreateTaskModalOpen} setIsCreateTaskModalOpen={setIsCreateTaskModalOpen} />
         </div>
       ) : (
         <div className="text-2xl flex justify-center mt-5">

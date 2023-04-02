@@ -1,4 +1,5 @@
 import $api from "../http";
+import { TaskType } from "@honack/util-shared-types";
 
 export default class TaskService {
   static async createTask(
@@ -15,5 +16,10 @@ export default class TaskService {
       executorId,
       iterationId
     });
+  }
+
+  // project/:projectId/iteration/:id
+  static async getTasksByIterationId(iterationId: number) {
+    return await $api.get<TaskType[]>(`/task/iteration/${iterationId}`);
   }
 }

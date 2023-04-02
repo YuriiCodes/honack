@@ -4,6 +4,7 @@ import { SetStateAction, useState } from "react";
 import { TaskStatus } from "@honack/util-shared-types";
 import TaskCard from "../TaskCard/TaskCard";
 import CreateTaskModal from "../CreateTaskForm/CreateTaskModal";
+import { useTaskStore } from "../../stores/TaskStore";
 
 
 const itemsFromBackend = [
@@ -69,6 +70,9 @@ type BoardProps = {
   setIsCreateTaskModalOpen: React.Dispatch<SetStateAction<boolean>>
 }
 const Board = ({ isCreateTaskModalOpen, setIsCreateTaskModalOpen }: BoardProps) => {
+    const tasks = useTaskStore(state => state.tasks);
+    console.log("tasks")
+  console.log(tasks)
     const [columns, setColumns] = useState(columnsFromBackend);
 
     return (
