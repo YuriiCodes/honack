@@ -5,7 +5,7 @@ import { InjectModel } from "@nestjs/sequelize";
 import Task from "../../models/Task.entity";
 import { IterationService } from "../iteration/iteration.service";
 import { AuthService } from "../auth/auth.service";
-import { TaskType, UserFromToken } from "@honack/util-shared-types";
+import { TaskStatus, TaskType, UserFromToken } from "@honack/util-shared-types";
 
 @Injectable()
 export class TaskService {
@@ -63,6 +63,13 @@ export class TaskService {
     task.title = updateTaskDto.title;
     task.description = updateTaskDto.description;
     task.executorId = updateTaskDto.executorId;
+
+    // validate that we get the right status
+    if (!Object.values(TaskStatus).includes(updateTaskDto.status)) {
+      throw new NotFoundException("Task status not found");
+    }
+
+    task.status = updateTaskDto.status;
 
     await task.save();
     return task as TaskType;
