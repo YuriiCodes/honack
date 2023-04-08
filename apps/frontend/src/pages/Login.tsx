@@ -5,6 +5,7 @@ import { enqueueSnackbar } from "notistack";
 
 import * as Yup from "yup";
 import axios, { AxiosError } from "axios";
+import { useNavigate } from "react-router-dom";
 
 
 const LoginSchema = Yup.object().shape({
@@ -14,6 +15,7 @@ const LoginSchema = Yup.object().shape({
 
 const Login = () => {
   const login = useAuthStore((state) => state.login);
+  const navigate = useNavigate();
   return (
     <div className={"container mx-auto flex justify-center h-screen"}>
       <Formik
@@ -29,6 +31,8 @@ const Login = () => {
             if (response.status === 200) {
               enqueueSnackbar("You've successfully logged in", { variant: "success" });
               login(AuthService.parseJwt(response.data.access_token));
+              navigate("/projects");
+
               return;
             }
           } catch (e: unknown | AxiosError) {
