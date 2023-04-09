@@ -1,17 +1,19 @@
 import CreateTaskForm from "./CreateTaskForm";
+import React from "react";
+import { useAllProjectsStore } from "../../stores/AllProjectsStore";
 
 interface CreateIterationModalProps {
   isCreateTaskModalOpen: boolean;
   setIsCreateTaskModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const CreateTaskModal = ({ isCreateTaskModalOpen, setIsCreateTaskModalOpen}: CreateIterationModalProps) => {
+
+const CreateTaskModal = ({ isCreateTaskModalOpen, setIsCreateTaskModalOpen }: CreateIterationModalProps) => {
   return (
     <div>
       <label htmlFor="my-modal-3" className="btn w-full" onClick={() => {
         setIsCreateTaskModalOpen(true);
       }}>Create new task</label>
-      {/* Put this part before </body> tag */}
-      <input type="checkbox" id="my-modal-3" className="modal-toggle"  checked={isCreateTaskModalOpen}/>
+      <input type="checkbox" id="my-modal-3" className="modal-toggle" checked={isCreateTaskModalOpen} />
       <div className="modal">
         <div className="modal-box relative">
           <label onClick={() => {
@@ -22,7 +24,7 @@ const CreateTaskModal = ({ isCreateTaskModalOpen, setIsCreateTaskModalOpen}: Cre
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default CreateTaskModal;

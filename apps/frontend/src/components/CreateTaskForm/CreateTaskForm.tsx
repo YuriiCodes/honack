@@ -25,6 +25,13 @@ const CreateTaskForm = ({ setIsModalOpen }: CreateTaskFormProps) => {
   const currentProjectId = useAllProjectsStore((state) => state.currentProjectId);
   const getProjectUsersByProjectId = useAllProjectsStore((state) => state.getProjectUsersByProjectId);
   const currentIterationId = useIterationStore((state) => state.currentIterationId);
+  const getProjectById = useAllProjectsStore((state) => state.getProjectById);
+  const [shouldShowJoinProjectCode, setShouldShowJoinProjectCode] = React.useState(false);
+
+  if (!currentProjectId) return <div>Something went wrong</div>;
+
+  const project = getProjectById(currentProjectId);
+  if (!project) return <div>Something went wrong</div>;
 
   if (!currentProjectId) {
     return <div>No project ID, something went wrong...</div>;
@@ -33,6 +40,7 @@ const CreateTaskForm = ({ setIsModalOpen }: CreateTaskFormProps) => {
   if (!projectUsers) {
     return <div>No project users, something went wrong...</div>;
   }
+
   return (
     <Formik
       initialValues={{
@@ -133,12 +141,31 @@ const CreateTaskForm = ({ setIsModalOpen }: CreateTaskFormProps) => {
                   );
                 })}
               </Field>
+
               {
                 errors.executorId && touched.executorId ?
                   <div className={"text-orange-700"}>{errors.executorId}</div> : null
               }
             </label>
+
+            <button className={"btn  btn-ghost w-1/2 mt-5"} onClick={() => {
+              setShouldShowJoinProjectCode(!shouldShowJoinProjectCode);
+            }}>Add new project members</button>
           </div>
+
+          {shouldShowJoinProjectCode && (
+            <div className={"mt-7"}>
+              <h2 className={"text-xl"}>Sharable code to join the project:</h2>
+              <div className="mockup-code hover:cursor-copy" onClick={() => {
+                navigator.clipboard.writeText(project?.joinCode).then(() => {
+                  enqueueSnackbar("Copied to clipboard", { variant: "success", autoHideDuration: 2000 });
+                });
+              }}>
+                <pre data-prefix="$"><code>{project.joinCode}</code></pre>
+              </div>
+            </div>
+          )}
+
 
           <div className="form-control mt-3">
             <button className="btn btn-outline">Create task</button>

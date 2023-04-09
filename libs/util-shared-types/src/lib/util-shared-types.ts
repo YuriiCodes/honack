@@ -49,6 +49,7 @@ export type ProjectType = AddedByOrm & {
   id: number;
   name: string;
   description: string;
+  joinCode: string;
   ownerId: number;
   iterations?: IterationType[];
 }
