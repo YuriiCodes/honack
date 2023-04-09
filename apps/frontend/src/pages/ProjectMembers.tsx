@@ -1,17 +1,16 @@
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ProjectsService from "../api/services/ProjectsService";
 import axios, { AxiosError } from "axios";
 import { enqueueSnackbar } from "notistack";
 import { useAllProjectsStore } from "../stores/AllProjectsStore";
 import { ProjectType } from "@honack/util-shared-types";
-import CreateIterationModal from "../components/CreateIterationForm/CreateIterationModal";
-import Board from "../components/Board/Board";
 import { useIterationStore } from "../stores/IterationStore";
 import TaskService from "../api/services/TaskService";
 import { useTaskStore } from "../stores/TaskStore";
+import ListOfAllMembers from "../components/ListOfAllMembers/ListOfAllMembers";
 
-export const Project = () => {
+export const ProjectMembers = () => {
   const { id } = useParams();
   const currentProjectId = useAllProjectsStore((state) => state.currentProjectId);
   const setCurrentProjectId = useAllProjectsStore((state) => state.setCurrentProjectId);
@@ -104,7 +103,6 @@ export const Project = () => {
   }, []);
 
 
-  //TODO: add effect that fetches all the tasks based on the current iteration.
   async function getTasks(projectId: number | null, iterationId: number | null) {
     if (!projectId || !iterationId) return;
 
@@ -132,7 +130,7 @@ export const Project = () => {
     // clean up function
     return () => {
       setTasks([]);
-    }
+    };
   }, [currentIterationId, isCreateTaskModalOpen]);
 
   if (!project) {
@@ -145,53 +143,13 @@ export const Project = () => {
   return (
     <div className="w-full h-full mt-3">
       <h1 className={"text-6xl m-5 flex justify-center"}>
-        {project?.name}
+        {project?.name} members
       </h1>
       <div className={"text-xl flex justify-center"}>
         {project?.description}
       </div>
 
-      {project.iterations && project.iterations.length > 0 && (
-        <div className={"flex justify-center m-5 items-center"}>
-          <span className={"mr-7"}>Please, select the iteration:</span>
-          <div className={"border-2 border-slate-400 rounded-sm mr-7"}>
-            <select className="select w-full max-w-xs"
-                    onChange={(e) => {
-                      setCurrentIterationId(+e.target.value);
-                    }}
-            >
-              {project.iterations.map((iteration) => (
-                <option key={iteration.id} value={iteration.id}>
-                  {iteration.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <CreateIterationModal projectId={+id} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
-          <Link to={`/project/${currentProjectId}/members`} className={"border-l-4 ml-5 pl-5"}>
-            <button className={"btn"}>
-              Manage project members
-            </button>
-          </Link>
-        </div>
-      )}
-
-      {(project.iterations && project.iterations.length > 0) ? (
-        <div className={"flex justify-center m-5"}>
-          <Board isCreateTaskModalOpen={isCreateTaskModalOpen} setIsCreateTaskModalOpen={setIsCreateTaskModalOpen} />
-        </div>
-      ) : (
-        <div className="text-2xl flex justify-center mt-5">
-          <div className={"flex flex-col"}>
-            <div className={"mt-48 mb-2 text-6xl w-full text-bold"}>No iterations found</div>
-            <div className={"my-2 w-full"}> Create an iteration to start adding tasks<span
-              aria-label={"pointing down emoji"}> 👇</span></div>
-            <div className={"my-2"}>
-              <CreateIterationModal projectId={+id} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
-            </div>
-          </div>
-        </div>
-      )}
+      <ListOfAllMembers />
     </div>
   );
 };
