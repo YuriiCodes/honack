@@ -24,4 +24,8 @@ export default class TaskService {
   static async getTasksByIterationId(iterationId: number) {
     return await $api.get<TaskType[]>(`/task/iteration/${iterationId}`);
   }
+
+  static async updateTask(task: TaskType) {
+    return await $api.patch<TaskType>(`/task/${task.id}`, task);
+  }
 }

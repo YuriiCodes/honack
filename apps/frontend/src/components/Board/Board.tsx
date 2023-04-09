@@ -5,40 +5,29 @@ import { TaskStatus, TaskType } from "@honack/util-shared-types";
 import TaskCard from "../TaskCard/TaskCard";
 import CreateTaskModal from "../CreateTaskForm/CreateTaskModal";
 import { useTaskStore } from "../../stores/TaskStore";
-
-
-const itemsFromBackend = [
-  { id: uuidv4(), content: "First task" },
-  { id: uuidv4(), content: "Second task" },
-  { id: uuidv4(), content: "Third task" }
-];
-const itemsFromBackend2: TaskType[] = [
-  {
-    id: 1,
-    iterationId: 1,
-    points: 12,
-    title: "task 1",
-    description: "Task 1 descr",
-    status: TaskStatus.TODO,
-    creatorId: 1,
-    executorId: 1
-  },
-  {
-    id: 2,
-    iterationId: 1,
-    points: 5,
-    title: "Task 1fffff",
-    description: "JFGUIHiuahuifiuhfuehafhesuihfueshfuieshufhueshfuihesuhf",
-    status: TaskStatus.TODO,
-    creatorId: 1,
-    executorId: 1
+import TaskService from "../../api/services/TaskService";
+const mapColumnNameToTaskStatus = (columnName: string): TaskStatus => {
+  switch (columnName) {
+    case "To Do":
+      return TaskStatus.TODO;
+    case "In Progress":
+      return TaskStatus.IN_PROGRESS;
+    case "Done":
+      return TaskStatus.DONE;
+    default:
+      return TaskStatus.TODO;
   }
-];
+};
 
-
-const onDragEnd = (result: DropResult, columns: any, setColumns: any) => {
+const onDragEnd = (result: DropResult,
+                   columns: any,
+                   setColumns: any,
+                   tasks: TaskType[],
+                   setTasks: (tasks: TaskType[]) => void) => {
   if (!result.destination) return;
-  const { source, destination } = result;
+  const { source, destination, draggableId } = result;
+
+  const movedTask = tasks.find(task => task.id === Number(draggableId));
   if (source.droppableId !== destination.droppableId) {
     const sourceColumn = columns[source.droppableId];
     const destColumn = columns[destination.droppableId];
@@ -55,6 +44,29 @@ const onDragEnd = (result: DropResult, columns: any, setColumns: any) => {
       [destination.droppableId]: {
         ...destColumn,
         items: destItems
+      }
+    });
+
+
+    const newStatus = mapColumnNameToTaskStatus(columns[destination.droppableId].name);
+    // call api update so that the column will be updated with the proper status.
+    if (!movedTask) return;
+    TaskService.updateTask({
+      ...movedTask,
+      status: newStatus
+    }).then(r => {
+      if (r.status === 200) {
+        // update the status of the task in the store
+        const updatedTasks = tasks.map(task => {
+          if (task.id === movedTask.id) {
+            return {
+              ...task,
+              status: newStatus
+            };
+          }
+          return task;
+        })
+        setTasks(updatedTasks);
       }
     });
   } else {
@@ -79,24 +91,22 @@ type BoardProps = {
 }
 const Board = ({ isCreateTaskModalOpen, setIsCreateTaskModalOpen }: BoardProps) => {
     const tasks = useTaskStore(state => state.tasks);
-    console.log("tasks");
-    console.log(tasks);
+    const setTasks = useTaskStore(state => state.setTasks);
 
     const columnsFromBackend = {
       [uuidv4()]: {
         name: "To Do",
-        items: tasks,
+        items: tasks.filter(task => task.status === TaskStatus.TODO),
       },
       [uuidv4()]: {
         name: "In Progress",
-        items: []
+        items: tasks.filter(task => task.status === TaskStatus.IN_PROGRESS),
       },
       [uuidv4()]: {
         name: "Done",
-        items: []
+        items: tasks.filter(task => task.status === TaskStatus.DONE),
       }
     };
-
 
     const [columns, setColumns] = useState(columnsFromBackend);
 
@@ -107,7 +117,7 @@ const Board = ({ isCreateTaskModalOpen, setIsCreateTaskModalOpen }: BoardProps) 
     return (
       <div className="w-full h-full flex justify-center">
         <DragDropContext onDragEnd={(result, provided) => {
-          onDragEnd(result, columns, setColumns);
+          onDragEnd(result, columns, setColumns, tasks, setTasks);
         }}>
           {Object.entries(columns).map(([id, column]) => {
             return (
@@ -130,8 +140,10 @@ const Board = ({ isCreateTaskModalOpen, setIsCreateTaskModalOpen }: BoardProps) 
                                        {...provided.draggableProps}
                                        {...provided.dragHandleProps}
                                        ref={provided.innerRef}>
+
                                     <TaskCard title={item.title} description={item.description} assignedTo={"Vasya"}
-                                              points={5} status={TaskStatus.IN_PROGRESS} />
+                                              points={5} status={item.status} />
+
                                   </div>
                                 );
                               }}
