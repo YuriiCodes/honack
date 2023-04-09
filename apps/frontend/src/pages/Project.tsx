@@ -106,8 +106,6 @@ export const Project = () => {
 
   //TODO: add effect that fetches all the tasks based on the current iteration.
   async function getTasks(projectId: number | null, iterationId: number | null) {
-    console.log("getTasks");
-    console.log(projectId, iterationId);
     if (!projectId || !iterationId) return;
 
     try {
@@ -130,7 +128,7 @@ export const Project = () => {
   }
 
   useEffect(() => {
-    getTasks(currentProjectId, currentIterationId);
+    void getTasks(currentProjectId, currentIterationId);
     // clean up function
     return () => {
       setTasks([]);

@@ -1,11 +1,12 @@
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
 import { v4 as uuidv4 } from "uuid";
-import { SetStateAction, useEffect, useState } from "react";
+import React, { SetStateAction, useEffect, useState } from "react";
 import { TaskStatus, TaskType } from "@honack/util-shared-types";
 import TaskCard from "../TaskCard/TaskCard";
 import CreateTaskModal from "../CreateTaskForm/CreateTaskModal";
 import { useTaskStore } from "../../stores/TaskStore";
 import TaskService from "../../api/services/TaskService";
+import { useAllProjectsStore } from "../../stores/AllProjectsStore";
 const mapColumnNameToTaskStatus = (columnName: string): TaskStatus => {
   switch (columnName) {
     case "To Do":
@@ -18,6 +19,7 @@ const mapColumnNameToTaskStatus = (columnName: string): TaskStatus => {
       return TaskStatus.TODO;
   }
 };
+
 
 const onDragEnd = (result: DropResult,
                    columns: any,
@@ -90,29 +92,41 @@ type BoardProps = {
   setIsCreateTaskModalOpen: React.Dispatch<SetStateAction<boolean>>
 }
 const Board = ({ isCreateTaskModalOpen, setIsCreateTaskModalOpen }: BoardProps) => {
-    const tasks = useTaskStore(state => state.tasks);
-    const setTasks = useTaskStore(state => state.setTasks);
 
-    const columnsFromBackend = {
-      [uuidv4()]: {
-        name: "To Do",
-        items: tasks.filter(task => task.status === TaskStatus.TODO),
-      },
-      [uuidv4()]: {
-        name: "In Progress",
-        items: tasks.filter(task => task.status === TaskStatus.IN_PROGRESS),
-      },
-      [uuidv4()]: {
-        name: "Done",
-        items: tasks.filter(task => task.status === TaskStatus.DONE),
-      }
-    };
+  const currentProjectId = useAllProjectsStore((state) => state.currentProjectId);
+  const getProjectUsersByProjectId = useAllProjectsStore((state) => state.getProjectUsersByProjectId);
+  const tasks = useTaskStore(state => state.tasks);
+  const setTasks = useTaskStore(state => state.setTasks);
 
-    const [columns, setColumns] = useState(columnsFromBackend);
+  const columnsFromBackend = {
+    [uuidv4()]: {
+      name: "To Do",
+      items: tasks.filter(task => task.status === TaskStatus.TODO),
+    },
+    [uuidv4()]: {
+      name: "In Progress",
+      items: tasks.filter(task => task.status === TaskStatus.IN_PROGRESS),
+    },
+    [uuidv4()]: {
+      name: "Done",
+      items: tasks.filter(task => task.status === TaskStatus.DONE),
+    }
+  };
 
-    useEffect(() => {
-      setColumns(columnsFromBackend);
-    }, [tasks]);
+  const [columns, setColumns] = useState(columnsFromBackend);
+  useEffect(() => {
+    setColumns(columnsFromBackend);
+  }, [tasks]);
+
+  if (!currentProjectId) {
+    return <div>No project selected, something went wrong...</div>;
+  }
+
+  const projectUsers = getProjectUsersByProjectId(currentProjectId);
+
+  if (!projectUsers) {
+    return <div>No project users, something went wrong...</div>;
+  }
 
     return (
       <div className="w-full h-full flex justify-center">
@@ -135,14 +149,18 @@ const Board = ({ isCreateTaskModalOpen, setIsCreateTaskModalOpen }: BoardProps) 
                           return (
                             <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
                               {(provided, snapshot, rubric) => {
+                                //get the executor name, join on item.executorId
+                                const taskExecutor  = projectUsers?.users.find(user => user.id === item.executorId);
+                                if (!taskExecutor) return <div>Something went wrong...</div>;
+
                                 return (
                                   <div className={"w-80 h-52  mt-2 rounded-md"}
                                        {...provided.draggableProps}
                                        {...provided.dragHandleProps}
                                        ref={provided.innerRef}>
 
-                                    <TaskCard title={item.title} description={item.description} assignedTo={"Vasya"}
-                                              points={5} status={item.status} />
+                                    <TaskCard title={item.title} description={item.description} assignedTo={taskExecutor.username}
+                                              points={item.points} status={item.status} />
 
                                   </div>
                                 );

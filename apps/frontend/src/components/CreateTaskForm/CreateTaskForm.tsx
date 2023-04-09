@@ -22,10 +22,10 @@ interface CreateTaskFormProps {
 }
 
 const CreateTaskForm = ({ setIsModalOpen }: CreateTaskFormProps) => {
-  const getProjectUsersByProjectId = useAllProjectsStore((state) => state.getProjectUsersByProjectId);
   const currentProjectId = useAllProjectsStore((state) => state.currentProjectId);
+  const getProjectUsersByProjectId = useAllProjectsStore((state) => state.getProjectUsersByProjectId);
   const currentIterationId = useIterationStore((state) => state.currentIterationId);
-  console.log("projectUSRS");
+
   if (!currentProjectId) {
     return <div>No project ID, something went wrong...</div>;
   }
