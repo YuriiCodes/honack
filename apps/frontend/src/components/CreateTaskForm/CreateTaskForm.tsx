@@ -6,6 +6,7 @@ import React from "react";
 import TaskService from "../../api/services/TaskService";
 import { useAllProjectsStore } from "../../stores/AllProjectsStore";
 import { useIterationStore } from "../../stores/IterationStore";
+import ShareJoinCode from "../ShareJoinCode/ShareJoinCode";
 
 const CreateTaskSchema = Yup.object().shape({
   title: Yup.string()
@@ -156,13 +157,7 @@ const CreateTaskForm = ({ setIsModalOpen }: CreateTaskFormProps) => {
           {shouldShowJoinProjectCode && (
             <div className={"mt-7"}>
               <h2 className={"text-xl"}>Sharable code to join the project:</h2>
-              <div className="mockup-code hover:cursor-copy" onClick={() => {
-                navigator.clipboard.writeText(project?.joinCode).then(() => {
-                  enqueueSnackbar("Copied to clipboard", { variant: "success", autoHideDuration: 2000 });
-                });
-              }}>
-                <pre data-prefix="$"><code>{project.joinCode}</code></pre>
-              </div>
+              <ShareJoinCode joinCode={project?.joinCode}/>
             </div>
           )}
 
