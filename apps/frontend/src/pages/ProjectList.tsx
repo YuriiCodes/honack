@@ -47,16 +47,15 @@ const ProjectList = () => {
           </li>
         ))}
 
-        {projects.length === 0 && (
-          <div className={"text-4xl text-center flex flex-col"}>
-            <span>You don't have any projects yet.</span>
-            <Link to={"/chooseTeam"}>
-              <button className={"btn mt-4 w-full"} >
-                Create or join one!
-              </button>
-            </Link>
-          </div>
-        )}
+
+        <div className={"text-4xl text-center flex flex-col"}>
+          {projects.length === 0 && (<span>You don't have any projects yet.</span>)}
+          <Link to={"/chooseTeam"}>
+            <button className={"btn mt-4 w-full"}>
+              Create or join another one!
+            </button>
+          </Link>
+        </div>
       </ul>
     </div>
   );

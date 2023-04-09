@@ -3,12 +3,14 @@ import { enqueueSnackbar } from "notistack";
 import axios, { AxiosError } from "axios";
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
+import { useNavigate } from "react-router-dom";
 
 const JoinProjectSchema = Yup.object().shape({
   joinCode: Yup.string()
     .required("Required"),
 });
 export const JoinProjectForm = () => {
+  const navigate = useNavigate();
   return (
     <Formik
       initialValues={{
@@ -20,6 +22,7 @@ export const JoinProjectForm = () => {
           const response = await ProjectsService.joinProject(values.joinCode);
           if (response.status === 201) {
             enqueueSnackbar("You've joined the project successfully", { variant: "success" });
+            navigate("/projects");
             return;
           }
 
