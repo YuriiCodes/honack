@@ -108,11 +108,9 @@ export const Project = () => {
 
   // effect that gets all the users for the project
   useEffect(() => {
-    getProjectUsers(id);
+    void getProjectUsers(id);
   }, []);
 
-
-  //TODO: add effect that fetches all the tasks based on the current iteration.
   async function getTasks(projectId: number | null, iterationId: number | null) {
     if (!projectId || !iterationId) return;
 
@@ -135,12 +133,12 @@ export const Project = () => {
     }
   }
 
+  // effect that gets all the tasks for the iteration,
+  // when the iteration id changes or when the 'create task'
+  // modal is closed => we need to re-fetch the tasks,
+  // because we might have created a new one
   useEffect(() => {
     void getTasks(currentProjectId, currentIterationId);
-    // clean up function
-    return () => {
-      setTasks([]);
-    }
   }, [currentIterationId, isCreateTaskModalOpen]);
 
   if (!project) {
