@@ -48,7 +48,7 @@ const CreateTaskForm = ({ setIsModalOpen }: CreateTaskFormProps) => {
         title: "",
         description: "",
         points: 1,
-        executorId: -11
+        executorId: -1
       }}
       validationSchema={CreateTaskSchema}
       onSubmit={async values => {
@@ -60,6 +60,12 @@ const CreateTaskForm = ({ setIsModalOpen }: CreateTaskFormProps) => {
           if (response.status === 201) {
             enqueueSnackbar("Task created", { variant: "success", autoHideDuration: 2000 });
             setIsModalOpen(false);
+            //clear form
+            values.title = "";
+            values.description = "";
+            values.points = 1;
+            values.executorId = -1;
+
             return;
           }
         } catch (e: unknown | AxiosError) {
@@ -77,15 +83,15 @@ const CreateTaskForm = ({ setIsModalOpen }: CreateTaskFormProps) => {
     >
       {({ errors, touched }) => (
         <Form>
-          <div className="form-control">
+          <div className="form-control my-5">
             <label className="label">
-              <span className="label-text">Iteration name</span>
+              <span className="label-text">Task name</span>
             </label>
             <label className="input-group" htmlFor={"title"}>
-              <span>Iteration name</span>
-              <div className={"flex justify-center"}>
+              <span>Name</span>
+              <div className={"flex justify-center w-full"}>
                 <Field type="text" id="title" name={"title"} placeholder="Task 1"
-                       className="input input-bordered" />
+                       className="input input-bordered w-full" />
                 {errors.title && touched.title ? (
                   <div className={"text-orange-700"}>{errors.title}</div>
                 ) : null}
@@ -93,46 +99,46 @@ const CreateTaskForm = ({ setIsModalOpen }: CreateTaskFormProps) => {
             </label>
           </div>
 
-          <div className="form-control">
+          <div className="form-control my-5">
             <label className="label">
               <span className="label-text">Iteration description</span>
             </label>
             <label className="input-group">
-              <span>Iteration description</span>
+              <span>Description</span>
               <Field as={"textarea"} type="text" name={"description"}
                      placeholder={"Initialize the project backend"}
-                     className="input input-bordered" />
+                     className="input input-bordered w-full" />
               {errors.description && touched.description ?
                 <div className={"text-orange-700"}>{errors.description}</div> : null}
             </label>
           </div>
 
 
-          <div className="form-control">
+          <div className="form-control my-5">
             <label className="label">
               <span className="label-text">Task points</span>
             </label>
             <label className="input-group">
-              <span>Task points</span>
+              <span>Points</span>
               <Field type="number" name={"points"}
                      min={1}
                      max={100}
                      placeholder={"Initialize the project backend"}
-                     className="input input-bordered" />
+                     className="input input-bordered w-full" />
               {errors.points && touched.points ?
                 <div className={"text-orange-700"}>{errors.points}</div> : null}
             </label>
           </div>
 
 
-          <div className="form-control">
+          <div className="form-control my-5">
             <label className="label">
-              <span className="label-text">Executor</span>
+              <span className="label-text">Task executor</span>
             </label>
             <label className="input-group">
               <span>Executor</span>
               {/*Render select with all projectUsers.users Ids as option:*/}
-              <Field as={"select"} name={"executorId"} className="input input-bordered">
+              <Field as={"select"} name={"executorId"} className="input input-bordered w-full">
                 <option value={-11}>Select executor</option>
                 {projectUsers?.users.map(user => {
                   return (
@@ -149,21 +155,22 @@ const CreateTaskForm = ({ setIsModalOpen }: CreateTaskFormProps) => {
               }
             </label>
 
-            <button className={"btn  btn-ghost w-1/2 mt-5"} onClick={() => {
+            <button className={"btn  btn-ghost w-full mt-5"} onClick={(e)  => {
+              e.preventDefault();
               setShouldShowJoinProjectCode(!shouldShowJoinProjectCode);
             }}>Add new project members</button>
           </div>
 
           {shouldShowJoinProjectCode && (
-            <div className={"mt-7"}>
+            <div className={"my-5"}>
               <h2 className={"text-xl"}>Sharable code to join the project:</h2>
               <ShareJoinCode joinCode={project?.joinCode}/>
             </div>
           )}
 
 
-          <div className="form-control mt-3">
-            <button className="btn btn-outline">Create task</button>
+          <div className="form-control my-5">
+            <button className="btn btn-primary">Create task</button>
           </div>
         </Form>
       )

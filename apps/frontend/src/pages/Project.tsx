@@ -15,13 +15,19 @@ export const Project = () => {
   const { id } = useParams();
   const currentProjectId = useAllProjectsStore((state) => state.currentProjectId);
   const setCurrentProjectId = useAllProjectsStore((state) => state.setCurrentProjectId);
-
+  const addProject = useAllProjectsStore((state) => state.addProject);
+  const addProjectUsers = useAllProjectsStore((state) => state.addProjectUsers);
   const getProjectById = useAllProjectsStore((state) => state.getProjectById);
+
+
   const currentIterationId = useIterationStore((state) => state.currentIterationId);
   const setCurrentIterationId = useIterationStore((state) => state.setCurrentIterationId);
-  const addProjectUsers = useAllProjectsStore((state) => state.addProjectUsers);
+
+
   const setTasks = useTaskStore(state => state.setTasks);
   const [project, setProject] = useState<ProjectType | undefined>(undefined);
+
+
   // state pieces for the 'create iteration' modal.
   // We pass isModalOpen to a dependency array of useEffect,
   // so that when it changes, we will re-fetch the project and its iterations.
@@ -44,6 +50,7 @@ export const Project = () => {
     const project = getProjectById(+id);
     if (project) {
       setProject(project);
+      addProject(project);
       return;
     }
 
@@ -52,6 +59,7 @@ export const Project = () => {
       const response = await ProjectsService.getProjectById(id);
       if (response.status === 200) {
         setProject(response.data);
+        addProject(response.data);
         if (response.data.iterations && response.data.iterations.length > 0) {
           setCurrentIterationId(response.data.iterations[0].id);
         }

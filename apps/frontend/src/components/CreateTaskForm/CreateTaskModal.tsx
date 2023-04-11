@@ -19,7 +19,7 @@ const CreateTaskModal = ({ isCreateTaskModalOpen, setIsCreateTaskModalOpen }: Cr
           <label onClick={() => {
             setIsCreateTaskModalOpen(false);
           }} htmlFor="my-modal-3" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
-          <h3 className="text-lg font-bold">Create a new task</h3>
+          <h3 className="text-2xl font-bold text-center">Create a new task</h3>
           <CreateTaskForm setIsModalOpen={setIsCreateTaskModalOpen} />
         </div>
       </div>
