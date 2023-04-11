@@ -39,7 +39,7 @@ const ProjectList = () => {
         </h1>
         {projects.map((project) => (
           <li key={project.id}
-              className={"p-4 bg-slate-600 hover:bg-slate-700 active:bg-slate-800 rounded-md shadow-md"}>
+              className={"p-4 my-10 bg-base-100 hover:shadow-lg active:bg-base-200 border rounded-md shadow-sm"}>
             <Link to={`/project/${project.id}`}>
               <p className={"text-xl"}>{project.name}</p>
               <div>{project.description}</div>
@@ -51,7 +51,7 @@ const ProjectList = () => {
         <div className={"text-4xl text-center flex flex-col"}>
           {projects.length === 0 && (<span>You don't have any projects yet.</span>)}
           <Link to={"/chooseTeam"}>
-            <button className={"btn mt-4 w-full"}>
+            <button className={"btn btn-primary w-full"}>
               Create or join another one!
             </button>
           </Link>

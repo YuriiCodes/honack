@@ -17,7 +17,6 @@ export const Project = () => {
   const setCurrentProjectId = useAllProjectsStore((state) => state.setCurrentProjectId);
   const addProject = useAllProjectsStore((state) => state.addProject);
   const addProjectUsers = useAllProjectsStore((state) => state.addProjectUsers);
-  const getProjectById = useAllProjectsStore((state) => state.getProjectById);
 
 
   const currentIterationId = useIterationStore((state) => state.currentIterationId);
@@ -46,15 +45,6 @@ export const Project = () => {
   async function getProject(id: string | undefined) {
     if (!id) return;
 
-    // try to get project from store
-    const project = getProjectById(+id);
-    if (project) {
-      setProject(project);
-      addProject(project);
-      return;
-    }
-
-    // project is not in store, try to fetch it from the api
     try {
       const response = await ProjectsService.getProjectById(id);
       if (response.status === 200) {
@@ -79,7 +69,7 @@ export const Project = () => {
 
   // effect that gets the project and its iterations
   useEffect(() => {
-    getProject(id);
+    void getProject(id);
   }, [isModalOpen]);
 
   async function getProjectUsers(id: string | undefined) {
@@ -158,8 +148,8 @@ export const Project = () => {
       </div>
 
       {project.iterations && project.iterations.length > 0 && (
-        <div className={"flex justify-center m-5 items-center"}>
-          <span className={"mr-7"}>Please, select the iteration:</span>
+        <div className={" flex justify-center m-5 pb-5 items-center border-b border-base-content "}>
+          <span className={"mr-7 text-lg"}>Please, select the iteration:</span>
           <div className={"border-2 border-slate-400 rounded-sm mr-7"}>
             <select className="select w-full max-w-xs"
                     onChange={(e) => {
@@ -174,7 +164,7 @@ export const Project = () => {
             </select>
           </div>
           <CreateIterationModal projectId={+id} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
-          <Link to={`/project/${currentProjectId}/members`} className={"border-l-4 ml-5 pl-5"}>
+          <Link to={`/project/${currentProjectId}/members`} className={"border-l border-base-content ml-5 pl-5"}>
             <button className={"btn"}>
               Manage project members
             </button>

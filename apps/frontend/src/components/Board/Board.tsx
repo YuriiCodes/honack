@@ -135,13 +135,15 @@ const Board = ({ isCreateTaskModalOpen, setIsCreateTaskModalOpen }: BoardProps) 
         }}>
           {Object.entries(columns).map(([id, column]) => {
             return (
-              <div className={"h-2/3"}>
-                <h2 className={"text-xl"}>{column.name}</h2>
+              <div className={"w-96 mx-5"}>
+                <h2 className={"text-2xl"}>{column.name}</h2>
+                {(column.name === "To Do") && <CreateTaskModal isCreateTaskModalOpen={isCreateTaskModalOpen}
+                                                               setIsCreateTaskModalOpen={setIsCreateTaskModalOpen} />}
                 <Droppable droppableId={id} key={id}>
                   {(provided, snapshot) => {
                     return (
                       <div
-                        className={"w-96 bg-slate-400 h-full mr-3 rounded-md flex flex-col items-center"}
+                        className={"w-full bg-base-300 h-screen mr-3 rounded-md flex flex-col items-center"}
                         {...provided.droppableProps}
                         ref={provided.innerRef}
                       >
@@ -154,7 +156,7 @@ const Board = ({ isCreateTaskModalOpen, setIsCreateTaskModalOpen }: BoardProps) 
                                 if (!taskExecutor) return <div>Something went wrong...</div>;
 
                                 return (
-                                  <div className={"w-80 h-52  mt-2 rounded-md"}
+                                  <div className={"w-80 h-52 mt-2 rounded-md"}
                                        {...provided.draggableProps}
                                        {...provided.dragHandleProps}
                                        ref={provided.innerRef}>
@@ -173,8 +175,6 @@ const Board = ({ isCreateTaskModalOpen, setIsCreateTaskModalOpen }: BoardProps) 
                     );
                   }}
                 </Droppable>
-                {(column.name === "To Do") && <CreateTaskModal isCreateTaskModalOpen={isCreateTaskModalOpen}
-                                                               setIsCreateTaskModalOpen={setIsCreateTaskModalOpen} />}
               </div>
             );
           })}

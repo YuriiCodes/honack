@@ -51,7 +51,10 @@ const Register = () => {
       >
         {({ errors, touched }) => (
           <Form>
-            <div className="form-control">
+            <div>
+              <h1 className={"m-5 text-4xl"}>Sign up</h1>
+            </div>
+            <div className="form-control my-5">
               <label className="label">
                 <span className="label-text">Your Email</span>
               </label>
@@ -67,7 +70,7 @@ const Register = () => {
               </label>
             </div>
 
-            <div className="form-control">
+            <div className="form-control my-5">
               <label className="label">
                 <span className="label-text">Your username</span>
               </label>
@@ -78,7 +81,7 @@ const Register = () => {
                   <div className={"text-orange-700"}>{errors.username}</div> : null}
               </label>
             </div>
-            <div className="form-control">
+            <div className="form-control my-5">
               <label className="label">
                 <span className="label-text">Your password</span>
               </label>
@@ -92,8 +95,8 @@ const Register = () => {
                 </div>
               </label>
             </div>
-            <div className="form-control mt-3">
-              <button className="btn btn-outline">Sign up</button>
+            <div className="form-control my-5">
+              <button className="btn btn-primary">Sign up</button>
             </div>
           </Form>
         )}

@@ -9,8 +9,8 @@ interface CreateIterationModalProps {
 
 const CreateTaskModal = ({ isCreateTaskModalOpen, setIsCreateTaskModalOpen }: CreateIterationModalProps) => {
   return (
-    <div>
-      <label htmlFor="my-modal-3" className="btn w-full" onClick={() => {
+    <div className={"w-full"}>
+      <label htmlFor="my-modal-3" className="btn btn-primary w-full" onClick={() => {
         setIsCreateTaskModalOpen(true);
       }}>Create new task</label>
       <input type="checkbox" id="my-modal-3" className="modal-toggle" checked={isCreateTaskModalOpen} />

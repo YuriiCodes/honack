@@ -83,7 +83,7 @@ const CreateIterationForm = ({ projectId, setIsModalOpen }: CreateIterationFormP
           </div>
 
           <div className="form-control mt-3">
-            <button className="btn btn-outline">Create iteration</button>
+            <button className="btn btn-primary">Create iteration</button>
           </div>
         </Form>
       )}

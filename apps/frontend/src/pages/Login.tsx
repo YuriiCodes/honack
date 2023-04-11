@@ -50,7 +50,7 @@ const Login = () => {
         {({ errors, touched }) => (
           <Form>
             <div>
-              <h1 className={"m-5  text-4xl"}>Login</h1>
+              <h1 className={"m-5 text-4xl"}>Login</h1>
             </div>
             <div className="form-control">
               <label className="label">
@@ -82,7 +82,7 @@ const Login = () => {
               </label>
             </div>
             <div className="form-control mt-3">
-              <button className="btn btn-outline" type={"submit"}>Log in</button>
+              <button className="btn btn-primary" type={"submit"}>Log in</button>
             </div>
           </Form>
         )}

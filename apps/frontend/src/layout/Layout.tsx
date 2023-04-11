@@ -1,6 +1,5 @@
 import React from "react";
 import Header from "./Header/Header";
-import Footer from "./Footer/Footer";
 
 
 interface LayoutProps {
@@ -14,7 +13,6 @@ const Layout = ({children}: LayoutProps) => {
       <div className={"h-screen"}>
         {children}
       </div>
-      <Footer/>
     </div>
   );
 };
