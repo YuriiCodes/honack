@@ -15,6 +15,12 @@ export interface DomainUser {
 
 export type DomainUserWithoutPassword = Omit<DomainUser, 'password'>;
 
+export type DomainUserWithSalary = DomainUserWithoutPassword & {
+  salary: number;
+  points: number;
+  expectedSalary: number;
+}
+
 export interface TokenPayload {
   id: number;
   sub: number;

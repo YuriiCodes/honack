@@ -58,9 +58,9 @@ const Login = () => {
               </label>
               <label className="input-group" htmlFor={"email"}>
                 <span>Email</span>
-                <div className={"flex justify-center"}>
+                <div className={"flex justify-center w-full"}>
                   <Field type="text" id="email" name={"email"} placeholder="info@site.com"
-                         className="input input-bordered" />
+                         className="input input-bordered w-full"/>
                   {errors.email && touched.email ? (
                     <div className={"text-orange-700"}>{errors.email}</div>
                   ) : null}

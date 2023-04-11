@@ -45,15 +45,15 @@ export const CreateProjectForm = () => {
     >
       {({ errors, touched }) => (
         <Form>
-          <div className="form-control">
+          <div className="form-control my-5">
             <label className="label">
               <span className="label-text">Project name</span>
             </label>
             <label className="input-group" htmlFor={"name"}>
               <span>Project name</span>
-              <div className={"flex justify-center"}>
+              <div className={"flex justify-center w-full"}>
                 <Field type="text" id="name" name={"name"} placeholder="An amazing project"
-                       className="input input-bordered" />
+                       className="input input-bordered w-full" />
                 {errors.name && touched.name ? (
                   <div className={"text-orange-700"}>{errors.name}</div>
                 ) : null}
@@ -61,7 +61,7 @@ export const CreateProjectForm = () => {
             </label>
           </div>
 
-          <div className="form-control">
+          <div className="form-control my-5">
             <label className="label">
               <span className="label-text">Project description</span>
             </label>
@@ -74,8 +74,8 @@ export const CreateProjectForm = () => {
                 <div className={"text-orange-700"}>{errors.description}</div> : null}
             </label>
           </div>
-          <div className="form-control mt-3">
-            <button className="btn btn-outline">Create project</button>
+          <div className="form-control my-5">
+            <button className="btn btn-primary">Create project</button>
           </div>
         </Form>
       )}

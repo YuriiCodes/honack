@@ -7,12 +7,14 @@ import {LocalStrategy} from "./strategies/local.auth";
 import {JwtModule} from "@nestjs/jwt";
 import {jwtConstants} from "../constants";
 import {JwtStrategy} from "./strategies/jwt.strategy";
+import Salary from "../../models/Salary.entity";
 
 
 @Module({
   imports: [
     SequelizeModule.forFeature([
       User,
+      Salary
     ]),
     JwtModule.register({
       secret: jwtConstants.secret,

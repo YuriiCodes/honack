@@ -41,7 +41,7 @@ export const JoinProjectForm = () => {
     >
       {({ errors, touched }) => (
         <Form>
-          <div className="form-control">
+          <div className="form-control my-5">
             <label className="label">
               <span className="label-text">Project join code</span>
             </label>
@@ -57,8 +57,8 @@ export const JoinProjectForm = () => {
             </label>
           </div>
 
-          <div className="form-control mt-3">
-            <button className="btn btn-outline">Join project</button>
+          <div className="form-control my-5">
+            <button className="btn btn-primary">Join project</button>
           </div>
         </Form>
       )}

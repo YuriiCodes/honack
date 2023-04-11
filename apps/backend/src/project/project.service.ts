@@ -3,11 +3,14 @@ import { CreateProjectDto } from "./dto/create-project.dto";
 import { UpdateProjectDto } from "./dto/update-project.dto";
 import { InjectModel } from "@nestjs/sequelize";
 import Project from "../../models/Project.entity";
-import { DomainUserWithoutPassword, ProjectType, UserFromToken } from "@honack/util-shared-types";
+import { DomainUserWithoutPassword, DomainUserWithSalary, ProjectType, UserFromToken } from "@honack/util-shared-types";
 import UsersProjects from "../../models/UsersProjects";
 import { v4 as uuidv4 } from "uuid";
 import Iteration from "../../models/Iteration.entity";
 import User from "../../models/User.entity";
+import Salary from "../../models/Salary.entity";
+import Task from "../../models/Task.entity";
+import { Op } from "sequelize";
 
 @Injectable()
 export class ProjectService {
@@ -15,9 +18,12 @@ export class ProjectService {
               private projectModel: typeof Project,
               @InjectModel(UsersProjects)
               private usersProjectsModel: typeof UsersProjects,
-
               @InjectModel(User)
-              private user: typeof User
+              private user: typeof User,
+              @InjectModel(Salary)
+              private salary: typeof Salary,
+              @InjectModel(Task)
+              private task: typeof Task
   ) {
   }
 
@@ -147,11 +153,76 @@ export class ProjectService {
 
     return await this.user.findAll({
       where: {
-        id: userIds,
+        id: userIds
       },
       attributes: {
-        exclude: ["password"]
+        exclude: ["password", "ownerId", "creatorId", "executorId"]
       }
     }) as DomainUserWithoutPassword[];
+  }
+
+
+  async getMembersWithSalary(projectId: number, userId: number, numberOfDays: number): Promise<DomainUserWithSalary[]> {
+    await this.checkIfUserBelongsToProject(userId, projectId);
+
+    const usersProjects = await this.usersProjectsModel.findAll({
+      where: {
+        projectId
+      }
+    });
+
+    const userIds = usersProjects.map(userProject => userProject.userId);
+
+    const users = await this.user.findAll({
+      where: {
+        id: userIds
+      },
+      attributes: {
+        exclude: ["password", "ownerId", "creatorId", "executorId"]
+      }
+    });
+
+    const usersWithSalary: DomainUserWithSalary[] = [];
+    users.forEach(user => {
+      usersWithSalary.push({
+        ...user.toJSON(),
+        salary: 0,
+        points: 0,
+        expectedSalary: 0
+      });
+    });
+
+    // add salary to users
+    for (const user of usersWithSalary) {
+      const salary = await this.salary.findOne({
+        where: {
+          userId: user.id
+        }
+      });
+      user.salary = salary.amount;
+    }
+
+    // add points to users
+    for (const user of usersWithSalary) {
+      const tasks = await this.task.findAll({
+        where: {
+          executorId: user.id,
+          status: "DONE",
+          createdAt: {
+            [Op.gte]: new Date(new Date().getTime() - (numberOfDays * 24 * 60 * 60 * 1000))
+          }
+        }
+      });
+      let points = 0;
+      tasks.forEach(task => {
+        points += task.points;
+      });
+      user.points = points;
+
+      // user's expected salary should be calculated based on his salary and points,
+      // where 100 points = 100% of salary, 50 points = 50% of salary, etc:
+      user.expectedSalary = user.salary * (user.points / 100);
+    }
+    return usersWithSalary;
   }
 }

@@ -5,13 +5,17 @@ import {SequelizeModule} from "@nestjs/sequelize";
 import Project from "../../models/Project.entity";
 import UsersProjects from "../../models/UsersProjects";
 import User from "../../models/User.entity";
+import Salary from "../../models/Salary.entity";
+import Task from "../../models/Task.entity";
 
 @Module({
   imports: [
     SequelizeModule.forFeature([
       Project,
       UsersProjects,
-      User
+      User,
+      Salary,
+      Task
     ]),
   ],
   controllers: [ProjectController],

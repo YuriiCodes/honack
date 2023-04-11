@@ -49,4 +49,9 @@ export class ProjectController {
   getMembers(@Param("id") id: string, @GetCurrentUser() user: UserFromToken): Promise<DomainUserWithoutPassword[]> {
     return this.projectService.getMembers(+id, user.id);
   }
+
+  @Get("/:id/members/salary/days/:period")
+  getMembersWithSalary(@Param("id") id: string, @Param("period") period: number, @GetCurrentUser() user: UserFromToken): Promise<DomainUserWithoutPassword[]> {
+    return this.projectService.getMembersWithSalary(+id, user.id, period);
+  }
 }
