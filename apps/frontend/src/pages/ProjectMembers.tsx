@@ -16,6 +16,7 @@ export const ProjectMembers = () => {
   const [project, setProject] = useState<ProjectType | undefined>(undefined);
   const [projectMembers, setProjectMembers] = useState<DomainUserWithSalary[]>([]);
   const [numOfDays, setNumOfDays] = useState<number>(30);
+  const [shouldShowJoinCode, setShouldShowJoinCode] = useState<boolean>(false);
 
   async function getProject(id: string | undefined) {
     if (!id) return;
@@ -92,7 +93,23 @@ export const ProjectMembers = () => {
         {project.name} {"members"}
       </h1>
       <div className={"text-xl flex justify-center"}>
-        {project.description}
+        <span>{project.description}</span>
+      </div>
+
+      <div className={"my-5 text-xl flex justify-center"}>
+        {!shouldShowJoinCode && <button className={"btn btn-ghost"} onClick={() => {
+          setShouldShowJoinCode(true);
+        }
+        }>Show join code
+        </button>}
+        {shouldShowJoinCode && <div>
+          <ShareJoinCode joinCode={project?.joinCode} />
+          <button className={"btn btn-ghost w-full mt-5"} onClick={() => {
+            setShouldShowJoinCode(false);
+          }}>Hide
+          </button>
+        </div>
+        }
       </div>
       <div className={"flex justify-center m-5"}>
 
@@ -134,12 +151,6 @@ export const ProjectMembers = () => {
           </table>
         </div>
 
-      </div>
-
-      <hr />
-      <div className={"my-5"}>
-        <h2 className={"text-xl"}>Sharable code to join the project:</h2>
-        <ShareJoinCode joinCode={project?.joinCode} />
       </div>
     </div>
   );
