@@ -8,7 +8,7 @@ import { DomainUserWithSalary, ProjectType } from "@honack/util-shared-types";
 import ShareJoinCode from "../components/ShareJoinCode/ShareJoinCode";
 import { useAuthStore } from "../stores/AuthStore";
 import UpdateSalaryModal from "../components/UpdateSalaryForm/UpdateSalaryModal";
-
+import { CSVLink } from "react-csv";
 
 export const ProjectMembers = () => {
     const getProjectById = useAllProjectsStore((state) => state.getProjectById);
@@ -135,6 +135,20 @@ export const ProjectMembers = () => {
                 </th>
                 <th className={"text-lg"}>Points earned in last {numOfDays} days</th>
                 <th className={"text-lg"}>Calculated payroll</th>
+                <th className={"text-lg"}><CSVLink
+                filename={`${new Date().toLocaleDateString()}-${project.name.trim().replace(" ", "-")}-members.csv`}
+                className={"btn btn-primary"}
+                  data={
+                  projectMembers.map(user => {
+                    return {
+                      username: user.username,
+                      email: user.email,
+                      salary: user.salary,
+                      points: user.points,
+                      expectedSalary: user.expectedSalary,
+                    };
+                  })
+                } target="_blank">Download  in CSV</CSVLink></th>
               </tr>
               </thead>
               <tbody>
