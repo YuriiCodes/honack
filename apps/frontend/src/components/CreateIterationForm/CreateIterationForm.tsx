@@ -52,15 +52,15 @@ const CreateIterationForm = ({ projectId, setIsModalOpen }: CreateIterationFormP
     >
       {({ errors, touched }) => (
         <Form>
-          <div className="form-control">
+          <div className="form-control my-5">
             <label className="label">
               <span className="label-text">Iteration name</span>
             </label>
             <label className="input-group" htmlFor={"name"}>
-              <span>Iteration name</span>
-              <div className={"flex justify-center"}>
+              <span>Name</span>
+              <div className={"flex justify-center w-full"}>
                 <Field type="text" id="name" name={"name"} placeholder="Sprint 1"
-                       className="input input-bordered" />
+                       className="input input-bordered w-full" />
                 {errors.name && touched.name ? (
                   <div className={"text-orange-700"}>{errors.name}</div>
                 ) : null}
@@ -68,15 +68,15 @@ const CreateIterationForm = ({ projectId, setIsModalOpen }: CreateIterationFormP
             </label>
           </div>
 
-          <div className="form-control">
+          <div className="form-control my-5">
             <label className="label">
               <span className="label-text">Iteration description</span>
             </label>
             <label className="input-group">
-              <span>Iteration description</span>
+              <span>description</span>
               <Field as={"textarea"} type="text" name={"description"}
                      placeholder={"Initialize the project backend"}
-                     className="input input-bordered" />
+                     className="input input-bordered w-full"/>
               {errors.description && touched.description ?
                 <div className={"text-orange-700"}>{errors.description}</div> : null}
             </label>

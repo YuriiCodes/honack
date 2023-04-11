@@ -18,7 +18,7 @@ const CreateIterationModal = ({projectId, isModalOpen, setIsModalOpen}: CreateIt
             <label onClick={() => {
               setIsModalOpen(false);
             }} htmlFor="my-modal-3" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
-            <h3 className="text-lg font-bold">Create a new iteration</h3>
+            <h3 className="text-3xl text-center font-bold">Create a new iteration</h3>
             <CreateIterationForm projectId={projectId} setIsModalOpen={setIsModalOpen}/>
           </div>
         </div>
