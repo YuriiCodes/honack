@@ -1,40 +1,20 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ProjectsService from "../api/services/ProjectsService";
 import axios, { AxiosError } from "axios";
 import { enqueueSnackbar } from "notistack";
 import { useAllProjectsStore } from "../stores/AllProjectsStore";
-import { ProjectType } from "@honack/util-shared-types";
-import { useIterationStore } from "../stores/IterationStore";
-import TaskService from "../api/services/TaskService";
-import { useTaskStore } from "../stores/TaskStore";
-import ListOfAllMembers from "../components/ListOfAllMembers/ListOfAllMembers";
+import { DomainUserWithoutPassword, ProjectType } from "@honack/util-shared-types";
+import ShareJoinCode from "../components/ShareJoinCode/ShareJoinCode";
+
 
 export const ProjectMembers = () => {
-  const { id } = useParams();
-  const currentProjectId = useAllProjectsStore((state) => state.currentProjectId);
-  const setCurrentProjectId = useAllProjectsStore((state) => state.setCurrentProjectId);
-
   const getProjectById = useAllProjectsStore((state) => state.getProjectById);
-  const currentIterationId = useIterationStore((state) => state.currentIterationId);
-  const setCurrentIterationId = useIterationStore((state) => state.setCurrentIterationId);
-  const addProjectUsers = useAllProjectsStore((state) => state.addProjectUsers);
-  const setTasks = useTaskStore(state => state.setTasks);
+
+  const { id } = useParams();
+
   const [project, setProject] = useState<ProjectType | undefined>(undefined);
-  // state pieces for the 'create iteration' modal.
-  // We pass isModalOpen to a dependency array of useEffect,
-  // so that when it changes, we will re-fetch the project and its iterations.
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false);
-
-
-  // effect that sets the current project id in the store
-  useEffect(() => {
-    if (!id) {
-      return;
-    }
-    setCurrentProjectId(+id);
-  }, []);
+  const [projectMembers, setProjectMembers] = useState<DomainUserWithoutPassword[]>([]);
 
   async function getProject(id: string | undefined) {
     if (!id) return;
@@ -46,14 +26,10 @@ export const ProjectMembers = () => {
       return;
     }
 
-    // project is not in store, try to fetch it from the api
     try {
       const response = await ProjectsService.getProjectById(id);
       if (response.status === 200) {
         setProject(response.data);
-        if (response.data.iterations && response.data.iterations.length > 0) {
-          setCurrentIterationId(response.data.iterations[0].id);
-        }
       }
     } catch (e: unknown | AxiosError) {
       // check if this is axios error
@@ -67,22 +43,15 @@ export const ProjectMembers = () => {
       enqueueSnackbar("Something went wrong", { variant: "error" });
     }
   }
-
-  // effect that gets the project and its iterations
-  useEffect(() => {
-    getProject(id);
-  }, [isModalOpen]);
 
   async function getProjectUsers(id: string | undefined) {
     if (!id) return;
     try {
       const response = await ProjectsService.getProjectMembers(id);
+      console.log(response.data);
       if (response.status === 200) {
         const users = response.data;
-        addProjectUsers({
-          projectId: +id,
-          users
-        });
+        setProjectMembers(users);
       }
     } catch (e: unknown | AxiosError) {
       // check if this is axios error
@@ -97,59 +66,109 @@ export const ProjectMembers = () => {
     }
   }
 
-  // effect that gets all the users for the project
+
+  // effect that gets the project , it's iterations and members
   useEffect(() => {
-    getProjectUsers(id);
+    void getProject(id);
+    void getProjectUsers(id);
   }, []);
 
-
-  async function getTasks(projectId: number | null, iterationId: number | null) {
-    if (!projectId || !iterationId) return;
-
-    try {
-      const response = await TaskService.getTasksByIterationId(iterationId);
-      if (response.status === 200) {
-        const tasks = response.data;
-        setTasks(tasks);
-      }
-    } catch (e: unknown | AxiosError) {
-      // check if this is axios error
-      if (axios.isAxiosError(e)) {
-        if (e.response?.status === 404) {
-          enqueueSnackbar("Tasks for the given ID is not found", { variant: "error" });
-          return;
-        }
-      }
-      // Unknown error
-      enqueueSnackbar("Something went wrong", { variant: "error" });
-    }
-  }
-
-  useEffect(() => {
-    void getTasks(currentProjectId, currentIterationId);
-    // clean up function
-    return () => {
-      setTasks([]);
-    };
-  }, [currentIterationId, isCreateTaskModalOpen]);
-
   if (!project) {
-    return <div>Loading...</div>;
+    return <div>Loading... No project</div>;
   }
   if (!id) {
     return <div>Project ID is not provided</div>;
   }
 
+  if (!projectMembers) {
+    return <div>Loading... No users</div>;
+  }
+
+
   return (
     <div className="w-full h-full mt-3">
       <h1 className={"text-6xl m-5 flex justify-center"}>
-        {project?.name} members
+        {project.name} {"members"}
       </h1>
       <div className={"text-xl flex justify-center"}>
-        {project?.description}
+        {project.description}
       </div>
+      <div className={"flex justify-center m-5"}>
 
-      <ListOfAllMembers />
+
+        <div className="overflow-x-auto w-full">
+          <table className="table w-full">
+            {/* head */}
+            <thead>
+            <tr>
+              <th>Name</th>
+              <th>Job</th>
+              <th>Favorite Color</th>
+              <th>Calculated payroll</th>
+            </tr>
+            </thead>
+            <tbody>
+            {/* row 1 */}
+            <tr>
+              <td>
+                <div className="flex items-center space-x-3">
+                  <div>
+                    <div className="font-bold">Hart Hagerty</div>
+                    <div className="text-sm opacity-50">United States</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                Zemlak, Daniel and Leannon
+                <br />
+                <span className="badge badge-ghost badge-sm">Desktop Support Technician</span>
+              </td>
+              <td>Purple</td>
+              <th>
+                <button className="btn btn-ghost btn-xs">details</button>
+              </th>
+            </tr>
+            {projectMembers.map(user => {
+              return (
+                <tr key={user.id}>
+                  <td>
+                    <div className="flex items-center space-x-3">
+                      <div>
+                        <div className="font-bold">{user.username}</div>
+                        <div className="text-sm opacity-50">{user.email}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    Zemlak, Daniel and Leannon
+                    <br />
+                    <span className="badge badge-ghost badge-sm">Desktop Support Technician</span>
+                  </td>
+                  <td>Purple</td>
+                  <th>
+                    <button className="btn btn-ghost btn-xs">details</button>
+                  </th>
+                </tr>
+              );
+            })}
+            </tbody>
+          </table>
+        </div>
+
+
+        <div className={"my-5"}>
+          <h2 className={"text-xl"}>Sharable code to join the project:</h2>
+          <ShareJoinCode joinCode={project?.joinCode} />
+        </div>
+
+        {projectMembers.map(user => {
+          return (
+            <option key={user.id} value={user.id}>
+              {user.username}
+            </option>
+          );
+        })}
+      </div>
     </div>
   );
 };
