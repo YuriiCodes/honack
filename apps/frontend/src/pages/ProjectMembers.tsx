@@ -10,6 +10,7 @@ import { useAuthStore } from "../stores/AuthStore";
 import UpdateSalaryModal from "../components/UpdateSalaryForm/UpdateSalaryModal";
 import { CSVLink } from "react-csv";
 import Breadcrumbs from "../components/Breadcrumbs/Breadcrumbs";
+import BarChartGraph from "../components/BarChart/BarChart";
 
 export const ProjectMembers = () => {
     const getProjectById = useAllProjectsStore((state) => state.getProjectById);
@@ -55,7 +56,6 @@ export const ProjectMembers = () => {
       if (!id) return;
       try {
         const response = await ProjectsService.getProjectMembersWithSalaries(id, numOfDays);
-        console.log(response.data);
         if (response.status === 200) {
           const users = response.data;
           setProjectMembers(users);
@@ -81,7 +81,7 @@ export const ProjectMembers = () => {
 
     useEffect(() => {
       void getProjectUsers(id);
-    }, [isUpdateUserSalaryModalOpen]);
+    }, [isUpdateUserSalaryModalOpen, numOfDays]);
 
     if (!project) {
       return <div>Loading... No project</div>;
@@ -116,10 +116,17 @@ export const ProjectMembers = () => {
         path: `/project/${project.id}/members`
       }
     ];
+    const graphData = projectMembers.map((user) => {
+      return {
+        name: user.username,
+        points: user.points,
+        salary: user.salary,
+      }
+    })
     return (
       <div className="w-full h-full mt-3">
         <div className="flex justify-center">
-          <Breadcrumbs  links={breadcrumbs}/>
+          <Breadcrumbs links={breadcrumbs} />
         </div>
         <h1 className={"text-6xl m-5 flex justify-center"}>
           {project.name} {"members"}
@@ -144,10 +151,8 @@ export const ProjectMembers = () => {
           }
         </div>
         <div className={"flex justify-center m-5"}>
-
-
-          <div className="overflow-x-auto w-full">
-            <table className="table w-full">
+          <div className="overflow-x-auto w-full mt-52 border-t pt-10 flex justify-center">
+            <table className="table w-2/3">
               {/* head */}
               <thead>
               <tr>
@@ -170,7 +175,20 @@ export const ProjectMembers = () => {
                         expectedSalary: user.expectedSalary
                       };
                     })
-                  } target="_blank">Download in CSV</CSVLink></th>
+                  } target="_blank">Download in CSV</CSVLink>
+                  <select className="select w-full max-w-xs ml-5" onChange={(e) => {
+                    setNumOfDays(+e.target.value);
+                  }
+                  }>
+                    <option disabled selected>Pick the desired timeframe</option>
+                    <option value={1}>1 day</option>
+                    <option value={7}>7 days</option>
+                    <option value={15}>15 days</option>
+                    <option value={30}>30 days</option>
+                    <option value={60}>60 days</option>
+                    <option value={90}>90 days</option>
+                  </select>
+                </th>
               </tr>
               </thead>
               <tbody>
@@ -207,7 +225,9 @@ export const ProjectMembers = () => {
               </tbody>
             </table>
           </div>
-
+        </div>
+        <div className={"w-1/2 h-1/2  m-5"}>
+          <BarChartGraph data={graphData} />
         </div>
       </div>
     );
