@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import ProjectsService from "../api/services/ProjectsService";
 import axios, { AxiosError } from "axios";
@@ -9,6 +9,7 @@ import ShareJoinCode from "../components/ShareJoinCode/ShareJoinCode";
 import { useAuthStore } from "../stores/AuthStore";
 import UpdateSalaryModal from "../components/UpdateSalaryForm/UpdateSalaryModal";
 import { CSVLink } from "react-csv";
+import Breadcrumbs from "../components/Breadcrumbs/Breadcrumbs";
 
 export const ProjectMembers = () => {
     const getProjectById = useAllProjectsStore((state) => state.getProjectById);
@@ -97,8 +98,29 @@ export const ProjectMembers = () => {
       return <div>Loading... No user</div>;
     }
 
+    const breadcrumbs = [
+      {
+        name: "Home",
+        path: "/"
+      },
+      {
+        name: "All projects",
+        path: "/projects"
+      },
+      {
+        name: project.name,
+        path: `/project/${project.id}`
+      },
+      {
+        name: "Members",
+        path: `/project/${project.id}/members`
+      }
+    ];
     return (
       <div className="w-full h-full mt-3">
+        <div className="flex justify-center">
+          <Breadcrumbs  links={breadcrumbs}/>
+        </div>
         <h1 className={"text-6xl m-5 flex justify-center"}>
           {project.name} {"members"}
         </h1>
@@ -136,19 +158,19 @@ export const ProjectMembers = () => {
                 <th className={"text-lg"}>Points earned in last {numOfDays} days</th>
                 <th className={"text-lg"}>Calculated payroll</th>
                 <th className={"text-lg"}><CSVLink
-                filename={`${new Date().toLocaleDateString()}-${project.name.trim().replace(" ", "-")}-members.csv`}
-                className={"btn btn-primary"}
+                  filename={`${new Date().toLocaleDateString()}-${project.name.trim().replace(" ", "-")}-members.csv`}
+                  className={"btn btn-primary"}
                   data={
-                  projectMembers.map(user => {
-                    return {
-                      username: user.username,
-                      email: user.email,
-                      salary: user.salary,
-                      points: user.points,
-                      expectedSalary: user.expectedSalary,
-                    };
-                  })
-                } target="_blank">Download  in CSV</CSVLink></th>
+                    projectMembers.map(user => {
+                      return {
+                        username: user.username,
+                        email: user.email,
+                        salary: user.salary,
+                        points: user.points,
+                        expectedSalary: user.expectedSalary
+                      };
+                    })
+                  } target="_blank">Download in CSV</CSVLink></th>
               </tr>
               </thead>
               <tbody>
