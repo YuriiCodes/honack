@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ProjectsService from "../api/services/ProjectsService";
 import axios, { AxiosError } from "axios";
 import { enqueueSnackbar } from "notistack";
@@ -10,6 +10,7 @@ import Board from "../components/Board/Board";
 import { useIterationStore } from "../stores/IterationStore";
 import TaskService from "../api/services/TaskService";
 import { useTaskStore } from "../stores/TaskStore";
+import Breadcrumbs from "../components/Breadcrumbs/Breadcrumbs";
 
 export const Project = () => {
   const { id } = useParams();
@@ -138,8 +139,27 @@ export const Project = () => {
     return <div>Project ID is not provided</div>;
   }
 
+
+
+  const breadcrumbs = [
+    {
+      name: "Home",
+      path: "/"
+    },
+    {
+      name: "All projects",
+      path: "/projects"
+    },
+    {
+      name: project.name,
+      path: `/project/${project.id}`
+    },
+  ];
   return (
     <div className="w-full h-full mt-3">
+      <div className="flex justify-center">
+        <Breadcrumbs links={breadcrumbs} />
+      </div>
       <h1 className={"text-6xl m-5 flex justify-center"}>
         {project?.name}
       </h1>
