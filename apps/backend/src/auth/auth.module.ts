@@ -8,6 +8,7 @@ import {JwtModule} from "@nestjs/jwt";
 import {jwtConstants} from "../constants";
 import {JwtStrategy} from "./strategies/jwt.strategy";
 import Salary from "../../models/Salary.entity";
+import { MailModule } from "../mail/mail.module";
 
 
 @Module({
@@ -20,6 +21,7 @@ import Salary from "../../models/Salary.entity";
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '60d' },
     }),
+    MailModule
   ],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy],

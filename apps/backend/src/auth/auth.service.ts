@@ -1,12 +1,14 @@
 import { ConflictException, Injectable, NotAcceptableException } from "@nestjs/common";
 import { CreateUserDto } from "./dto/create-user.dto";
-import { UpdateAuthDto } from "./dto/update-auth.dto";
 import { InjectModel } from "@nestjs/sequelize";
 import User from "../../models/User.entity";
 import * as bcrypt from "bcrypt";
 import { JwtService } from "@nestjs/jwt";
 import { DomainUser } from "@honack/util-shared-types";
 import Salary from "../../models/Salary.entity";
+import { MailService } from "../mail/mail.service";
+import { ForgotPasswordDto } from "./dto/forgot-password.dto";
+
 
 @Injectable()
 export class AuthService {
@@ -15,7 +17,9 @@ export class AuthService {
     private userModel: typeof User,
     @InjectModel(Salary)
     private salaryModel: typeof Salary,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+
+    private mailService: MailService
   ) {
   }
 
@@ -68,22 +72,6 @@ export class AuthService {
     return createdUser.email;
   }
 
-  findAll() {
-    return `This action returns all auth`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
-  }
-
   async validateUser(email: string, password: string): Promise<DomainUser> {
     const user = await this.userModel.findOne({
       where: {
@@ -106,6 +94,43 @@ export class AuthService {
     const payload = { id: user.id, email: user.email, sub: user._id };
     return {
       access_token: this.jwtService.sign(payload)
+    };
+  }
+
+  async forgotPassword({ email }: ForgotPasswordDto) {
+    // check if user with given email exists:
+    const user = await this.userModel.findOne({
+      where: {
+        email
+      }
+    });
+
+    // if user exists throw error
+    if (!user) {
+      throw new ConflictException("User does not exist");
+    }
+
+    // generate random password
+    const password = Math.random().toString(36).slice(-8);
+
+    // hash password
+    const saltOrRounds = 10;
+    // update user password
+    user.password = await bcrypt.hash(password, saltOrRounds);
+    await user.save();
+
+
+    // send email
+    await this.mailService.send({
+      to: email,
+      from: "yuriypidlisnyi2020@gmail.com",
+      subject: "Forgot Password",
+      text: `Your password is: ${password}`,
+      html: `<strong>Your password is: ${password}</strong>`
+    });
+
+    return {
+      message: "Email sent"
     };
   }
 }

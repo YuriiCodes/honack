@@ -7,6 +7,8 @@ const configValidationSchema = Joi.object({
   DB_USERNAME: Joi.string().required(),
   DB_PASSWORD: Joi.string().required(),
   DB_DATABASE: Joi.string().required(),
+
+  SEND_GRID_KEY: Joi.string().required(),
 });
 
 export default configValidationSchema;
