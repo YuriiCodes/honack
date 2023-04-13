@@ -1,12 +1,13 @@
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
 import { v4 as uuidv4 } from "uuid";
 import React, { SetStateAction, useEffect, useState } from "react";
-import { TaskStatus, TaskType } from "@honack/util-shared-types";
+import { ProjectType, TaskStatus, TaskType } from "@honack/util-shared-types";
 import TaskCard from "../TaskCard/TaskCard";
 import CreateTaskModal from "../CreateTaskForm/CreateTaskModal";
 import { useTaskStore } from "../../stores/TaskStore";
 import TaskService from "../../api/services/TaskService";
 import { useAllProjectsStore } from "../../stores/AllProjectsStore";
+import { useAuthStore } from "../../stores/AuthStore";
 const mapColumnNameToTaskStatus = (columnName: string): TaskStatus => {
   switch (columnName) {
     case "To Do":
@@ -90,8 +91,11 @@ const onDragEnd = (result: DropResult,
 type BoardProps = {
   isCreateTaskModalOpen: boolean
   setIsCreateTaskModalOpen: React.Dispatch<SetStateAction<boolean>>
+  project: ProjectType | undefined
 }
-const Board = ({ isCreateTaskModalOpen, setIsCreateTaskModalOpen }: BoardProps) => {
+const Board = ({ isCreateTaskModalOpen, setIsCreateTaskModalOpen, project }: BoardProps) => {
+
+  const user = useAuthStore((state) => state.user);
 
   const currentProjectId = useAllProjectsStore((state) => state.currentProjectId);
   const getProjectUsersByProjectId = useAllProjectsStore((state) => state.getProjectUsersByProjectId);
@@ -127,6 +131,9 @@ const Board = ({ isCreateTaskModalOpen, setIsCreateTaskModalOpen }: BoardProps) 
   if (!projectUsers) {
     return <div>No project users, something went wrong...</div>;
   }
+  if (!project) {
+    return <div>No project, something went wrong...</div>;
+  }
 
     return (
       <div className="w-full h-full flex justify-center">
@@ -137,8 +144,8 @@ const Board = ({ isCreateTaskModalOpen, setIsCreateTaskModalOpen }: BoardProps) 
             return (
               <div className={"w-96 mx-5"}>
                 <h2 className={"text-2xl"}>{column.name}</h2>
-                {(column.name === "To Do") && <CreateTaskModal isCreateTaskModalOpen={isCreateTaskModalOpen}
-                                                               setIsCreateTaskModalOpen={setIsCreateTaskModalOpen} />}
+                {(column.name === "To Do" && (project.ownerId === user?.id)) && <CreateTaskModal isCreateTaskModalOpen={isCreateTaskModalOpen}
+                                                                                                 setIsCreateTaskModalOpen={setIsCreateTaskModalOpen} />}
                 <Droppable droppableId={id} key={id}>
                   {(provided, snapshot) => {
                     return (

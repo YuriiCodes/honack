@@ -194,7 +194,10 @@ export const Project = () => {
 
       {(project.iterations && project.iterations.length > 0) ? (
         <div className={"flex justify-center m-5"}>
-          <Board isCreateTaskModalOpen={isCreateTaskModalOpen} setIsCreateTaskModalOpen={setIsCreateTaskModalOpen} />
+          <Board isCreateTaskModalOpen={isCreateTaskModalOpen}
+                 setIsCreateTaskModalOpen={setIsCreateTaskModalOpen}
+                 project={project}
+          />
         </div>
       ) : (
         <div className="text-2xl flex justify-center mt-5">

@@ -69,13 +69,6 @@ const CreateTaskForm = ({ setIsModalOpen }: CreateTaskFormProps) => {
             return;
           }
         } catch (e: unknown | AxiosError) {
-          // check if this is axios error
-          if (axios.isAxiosError(e)) {
-            if (e.response?.status === 409) {
-              enqueueSnackbar("Iteration name already exists", { variant: "error" });
-              return;
-            }
-          }
           // Unknown error
           enqueueSnackbar("Something went wrong", { variant: "error" });
         }

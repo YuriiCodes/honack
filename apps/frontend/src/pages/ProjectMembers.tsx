@@ -164,7 +164,7 @@ export const ProjectMembers = () => {
                 <tr>
                   <th className={"text-lg"}>Name</th>
                   <th className={"text-lg"}>
-                    <span>Base salary </span>
+                    <span>Base salary</span>
                   </th>
                   <th className={"text-lg"}>Points earned in last {numOfDays} days</th>
                   <th className={"text-lg"}>Calculated payroll</th>
