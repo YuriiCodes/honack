@@ -121,13 +121,17 @@ export class AuthService {
 
 
     // send email
-    await this.mailService.send({
-      to: email,
-      from: "yuriypidlisnyi2020@gmail.com",
-      subject: "Forgot Password",
-      text: `Your password is: ${password}`,
-      html: `<strong>Your password is: ${password}</strong>`
-    });
+    try {
+      await this.mailService.send({
+        to: email,
+        from: "yuriypidlisnyi2020@gmail.com",
+        subject: "Forgot Password",
+        text: `Your password is: ${password}`,
+        html: `<strong>Your password is: ${password}</strong>`
+      });
+    } catch (e) {
+      throw new NotAcceptableException("Could not send email");
+    }
 
     return {
       message: "Email sent"
