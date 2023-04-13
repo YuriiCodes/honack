@@ -11,6 +11,7 @@ import UpdateSalaryModal from "../components/UpdateSalaryForm/UpdateSalaryModal"
 import { CSVLink } from "react-csv";
 import Breadcrumbs from "../components/Breadcrumbs/Breadcrumbs";
 import BarChartGraph from "../components/BarChart/BarChart";
+import SelectTimeFrame from "../components/SelectTimeFrame/SelectTimeFrame";
 
 export const ProjectMembers = () => {
     const getProjectById = useAllProjectsStore((state) => state.getProjectById);
@@ -120,9 +121,10 @@ export const ProjectMembers = () => {
       return {
         name: user.username,
         points: user.points,
-        salary: user.expectedSalary,
-      }
-    })
+        expectedSalary: user.expectedSalary,
+        baseSalary: user.salary
+      };
+    });
     return (
       <div className="w-full h-full mt-3">
         <div className="flex justify-center">
@@ -150,84 +152,79 @@ export const ProjectMembers = () => {
           </div>
           }
         </div>
-        <div className={"flex justify-center m-5"}>
-          <div className="overflow-x-auto w-full mt-52 border-t pt-10 flex justify-center">
-            <table className="table w-2/3">
-              {/* head */}
-              <thead>
-              <tr>
-                <th className={"text-lg"}>Name</th>
-                <th className={"text-lg"}>
-                  <span>Base salary </span>
-                </th>
-                <th className={"text-lg"}>Points earned in last {numOfDays} days</th>
-                <th className={"text-lg"}>Calculated payroll</th>
-                <th className={"text-lg"}><CSVLink
-                  filename={`${new Date().toLocaleDateString()}-${project.name.trim().replace(" ", "-")}-members.csv`}
-                  className={"btn btn-primary"}
-                  data={
-                    projectMembers.map(user => {
-                      return {
-                        username: user.username,
-                        email: user.email,
-                        salary: user.salary,
-                        points: user.points,
-                        expectedSalary: user.expectedSalary
-                      };
-                    })
-                  } target="_blank">Download in CSV</CSVLink>
-                  <select className="select w-full max-w-sm ml-5" onChange={(e) => {
-                    setNumOfDays(+e.target.value);
-                  }
-                  }>
-                    <option disabled selected>Pick the desired timeframe</option>
-                    <option value={1}>1 day</option>
-                    <option value={7}>7 days</option>
-                    <option value={15}>15 days</option>
-                    <option value={30}>30 days</option>
-                    <option value={60}>60 days</option>
-                    <option value={90}>90 days</option>
-                  </select>
-                </th>
-              </tr>
-              </thead>
-              <tbody>
-              {projectMembers.map(user => {
-                return (
-                  <tr key={user.id}>
-                    <td>
-                      <div className="flex items-center space-x-3">
-                        <div>
-                          <div className="font-bold">{user.username}</div>
-                          <div className="text-sm opacity-50">{user.email}</div>
-                        </div>
-                      </div>
-                    </td>
-                    {project.ownerId === user.id ? (
-                      <td>
-                        {"$"}{user.salary}
-                        <UpdateSalaryModal previousSalary={user.salary || 0} userId={user.id || -1}
-                                           isModalOpen={isUpdateUserSalaryModalOpen}
-                                           setIsModalOpen={setIsUpdateUserSalaryModalOpen} />
-                      </td>
-                    ) : (
-                      <td>
-                        {"$"}{user.salary}
-                      </td>
-                    )}
-                    <td>{user.points}</td>
-                    <td>
-                      {"$"}{user.expectedSalary}
-                    </td>
-                  </tr>
-                );
-              })}
-              </tbody>
-            </table>
-          </div>
+
+        <div className={"flex justify-center"}>
+          <SelectTimeFrame setNumOfDays={setNumOfDays} />
         </div>
-        <div className={"w-1/2 h-1/2  m-5"}>
-          <BarChartGraph data={graphData} />
+          <div className="overflow-x-auto w-full flex justify-center">
+            <div className={"w-full flex justify-center"}>
+              <table className="table w-2/3 shadow-md">
+                {/* head */}
+                <thead>
+                <tr>
+                  <th className={"text-lg"}>Name</th>
+                  <th className={"text-lg"}>
+                    <span>Base salary </span>
+                  </th>
+                  <th className={"text-lg"}>Points earned in last {numOfDays} days</th>
+                  <th className={"text-lg"}>Calculated payroll</th>
+                  <th className={"text-lg"}><CSVLink
+                    filename={`${new Date().toLocaleDateString()}-${project.name.trim().replace(" ", "-")}-members.csv`}
+                    className={"btn btn-primary"}
+                    data={
+                      projectMembers.map(user => {
+                        return {
+                          username: user.username,
+                          email: user.email,
+                          salary: user.salary,
+                          points: user.points,
+                          expectedSalary: user.expectedSalary
+                        };
+                      })
+                    } target="_blank">Download in CSV</CSVLink>
+                  </th>
+                </tr>
+                </thead>
+                <tbody>
+                {projectMembers.map(user => {
+                  return (
+                    <tr key={user.id}>
+                      <td>
+                        <div className="flex items-center space-x-3">
+                          <div>
+                            <div className="font-bold">{user.username}</div>
+                            <div className="text-sm opacity-50">{user.email}</div>
+                          </div>
+                        </div>
+                      </td>
+                      {project.ownerId === user.id ? (
+                        <td>
+                          {"$"}{user.salary}
+                          <UpdateSalaryModal previousSalary={user.salary || 0} userId={user.id || -1}
+                                             isModalOpen={isUpdateUserSalaryModalOpen}
+                                             setIsModalOpen={setIsUpdateUserSalaryModalOpen} />
+                        </td>
+                      ) : (
+                        <td>
+                          {"$"}{user.salary}
+                        </td>
+                      )}
+                      <td>{user.points}</td>
+                      <td>
+                        {"$"}{user.expectedSalary}
+                      </td>
+                    </tr>
+                  );
+                })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        <div className={"flex items-center justify-center  w-full h-1/2  m-5"}>
+          <div className={"w-2/3 h-1/2 shadow-md"}>
+            <BarChartGraph data={graphData} />
+          </div>
         </div>
       </div>
     );
