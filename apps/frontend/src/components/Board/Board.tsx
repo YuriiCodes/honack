@@ -8,13 +8,21 @@ import { useTaskStore } from "../../stores/TaskStore";
 import TaskService from "../../api/services/TaskService";
 import { useAllProjectsStore } from "../../stores/AllProjectsStore";
 import { useAuthStore } from "../../stores/AuthStore";
+
+
+enum columnNames {
+  TODO = "To Do",
+  IN_PROGRESS = "In Progress",
+  DONE = "Done",
+}
+
 const mapColumnNameToTaskStatus = (columnName: string): TaskStatus => {
   switch (columnName) {
-    case "To Do":
+    case columnNames.TODO:
       return TaskStatus.TODO;
-    case "In Progress":
+    case columnNames.IN_PROGRESS:
       return TaskStatus.IN_PROGRESS;
-    case "Done":
+    case columnNames.DONE:
       return TaskStatus.DONE;
     default:
       return TaskStatus.TODO;
@@ -68,7 +76,7 @@ const onDragEnd = (result: DropResult,
             };
           }
           return task;
-        })
+        });
         setTasks(updatedTasks);
       }
     });
@@ -95,45 +103,45 @@ type BoardProps = {
 }
 const Board = ({ isCreateTaskModalOpen, setIsCreateTaskModalOpen, project }: BoardProps) => {
 
-  const user = useAuthStore((state) => state.user);
+    const user = useAuthStore((state) => state.user);
 
-  const currentProjectId = useAllProjectsStore((state) => state.currentProjectId);
-  const getProjectUsersByProjectId = useAllProjectsStore((state) => state.getProjectUsersByProjectId);
-  const tasks = useTaskStore(state => state.tasks);
-  const setTasks = useTaskStore(state => state.setTasks);
+    const currentProjectId = useAllProjectsStore((state) => state.currentProjectId);
+    const getProjectUsersByProjectId = useAllProjectsStore((state) => state.getProjectUsersByProjectId);
+    const tasks = useTaskStore(state => state.tasks);
+    const setTasks = useTaskStore(state => state.setTasks);
 
-  const columnsFromBackend = {
-    [uuidv4()]: {
-      name: "To Do",
-      items: tasks.filter(task => task.status === TaskStatus.TODO),
-    },
-    [uuidv4()]: {
-      name: "In Progress",
-      items: tasks.filter(task => task.status === TaskStatus.IN_PROGRESS),
-    },
-    [uuidv4()]: {
-      name: "Done",
-      items: tasks.filter(task => task.status === TaskStatus.DONE),
+    const columnsFromBackend = {
+      [uuidv4()]: {
+        name: columnNames.TODO,
+        items: tasks.filter(task => task.status === TaskStatus.TODO)
+      },
+      [uuidv4()]: {
+        name: columnNames.IN_PROGRESS,
+        items: tasks.filter(task => task.status === TaskStatus.IN_PROGRESS)
+      },
+      [uuidv4()]: {
+        name: columnNames.DONE,
+        items: tasks.filter(task => task.status === TaskStatus.DONE)
+      }
+    };
+
+    const [columns, setColumns] = useState(columnsFromBackend);
+    useEffect(() => {
+      setColumns(columnsFromBackend);
+    }, [tasks]);
+
+    if (!currentProjectId) {
+      return <div>No project selected, something went wrong...</div>;
     }
-  };
 
-  const [columns, setColumns] = useState(columnsFromBackend);
-  useEffect(() => {
-    setColumns(columnsFromBackend);
-  }, [tasks]);
+    const projectUsers = getProjectUsersByProjectId(currentProjectId);
 
-  if (!currentProjectId) {
-    return <div>No project selected, something went wrong...</div>;
-  }
-
-  const projectUsers = getProjectUsersByProjectId(currentProjectId);
-
-  if (!projectUsers) {
-    return <div>No project users, something went wrong...</div>;
-  }
-  if (!project) {
-    return <div>No project, something went wrong...</div>;
-  }
+    if (!projectUsers) {
+      return <div>No project users, something went wrong...</div>;
+    }
+    if (!project) {
+      return <div>No project, something went wrong...</div>;
+    }
 
     return (
       <div className="w-full h-full flex justify-center">
@@ -144,8 +152,9 @@ const Board = ({ isCreateTaskModalOpen, setIsCreateTaskModalOpen, project }: Boa
             return (
               <div className={"w-96 mx-5"}>
                 <h2 className={"text-2xl"}>{column.name}</h2>
-                {(column.name === "To Do" && (project.ownerId === user?.id)) && <CreateTaskModal isCreateTaskModalOpen={isCreateTaskModalOpen}
-                                                                                                 setIsCreateTaskModalOpen={setIsCreateTaskModalOpen} />}
+                {(column.name === columnNames.TODO && (project.ownerId === user?.id)) &&
+                  <CreateTaskModal isCreateTaskModalOpen={isCreateTaskModalOpen}
+                                   setIsCreateTaskModalOpen={setIsCreateTaskModalOpen} />}
                 <Droppable droppableId={id} key={id}>
                   {(provided, snapshot) => {
                     return (
@@ -159,7 +168,7 @@ const Board = ({ isCreateTaskModalOpen, setIsCreateTaskModalOpen, project }: Boa
                             <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
                               {(provided, snapshot, rubric) => {
                                 //get the executor name, join on item.executorId
-                                const taskExecutor  = projectUsers?.users.find(user => user.id === item.executorId);
+                                const taskExecutor = projectUsers?.users.find(user => user.id === item.executorId);
                                 if (!taskExecutor) return <div>Something went wrong...</div>;
 
                                 return (
@@ -168,8 +177,13 @@ const Board = ({ isCreateTaskModalOpen, setIsCreateTaskModalOpen, project }: Boa
                                        {...provided.dragHandleProps}
                                        ref={provided.innerRef}>
 
-                                    <TaskCard title={item.title} description={item.description} assignedTo={taskExecutor.username}
-                                              points={item.points} status={item.status} />
+                                    <TaskCard
+                                      title={item.title}
+                                      description={item.description}
+                                      assignedTo={taskExecutor.username}
+                                      points={item.points}
+                                      status={item.status}
+                                    />
 
                                   </div>
                                 );
