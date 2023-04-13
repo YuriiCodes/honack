@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import ProjectsService from "../api/services/ProjectsService";
 import axios, { AxiosError } from "axios";
@@ -120,7 +120,7 @@ export const ProjectMembers = () => {
       return {
         name: user.username,
         points: user.points,
-        salary: user.salary,
+        salary: user.expectedSalary,
       }
     })
     return (
@@ -176,7 +176,7 @@ export const ProjectMembers = () => {
                       };
                     })
                   } target="_blank">Download in CSV</CSVLink>
-                  <select className="select w-full max-w-xs ml-5" onChange={(e) => {
+                  <select className="select w-full max-w-sm ml-5" onChange={(e) => {
                     setNumOfDays(+e.target.value);
                   }
                   }>

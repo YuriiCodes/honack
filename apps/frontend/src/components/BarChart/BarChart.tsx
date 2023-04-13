@@ -26,7 +26,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
       <div className="bg-primary-content p-3">
         <p className="label font-bold">{`${label}`}</p>
         <p className="points">{`Points: ${payload[0].value}`}</p>
-        <p className="salary">{`Salary: ${payload[0].payload.salary}`}</p>
+        <p className="salary">{`Expected Salary: ${payload[0].payload.salary}`}</p>
       </div>
     );
   }
