@@ -17,7 +17,7 @@ const Login = () => {
   const login = useAuthStore((state) => state.login);
   const navigate = useNavigate();
   return (
-    <div className={"container mx-auto flex justify-center h-screen"}>
+    <div className={"container mx-auto flex justify-center items-center h-screen"}>
       <Formik
         initialValues={{
           email: "",
@@ -50,7 +50,7 @@ const Login = () => {
         {({ errors, touched }) => (
           <Form>
             <div>
-              <h1 className={"m-5 text-4xl"}>Login</h1>
+              <h1 className={"mt-10 text-4xl"}>Login</h1>
             </div>
             <div className="form-control">
               <label className="label">

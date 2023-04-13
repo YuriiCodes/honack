@@ -5,7 +5,7 @@ import { Route, Routes } from "react-router-dom";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import { ChooseTeam } from "../pages/ChooseTeam";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useAuthStore } from "../stores/AuthStore";
 import AuthService from "../api/services/AuthService";
 import LocalStorageService from "../api/services/LocalStorageService";
@@ -13,6 +13,7 @@ import axios, { AxiosError } from "axios";
 import { Project } from "../pages/Project";
 import ProjectList from "../pages/ProjectList";
 import { ProjectMembers } from "../pages/ProjectMembers";
+import Guide from "../pages/Guide";
 
 export function App() {
   const login = useAuthStore((state) => state.login);
@@ -44,6 +45,7 @@ export function App() {
       <Route path="/project/:id" element={<Project />} />
       <Route path="/project/:id/members" element={<ProjectMembers />} />
       <Route path="/projects" element={<ProjectList />} />
+      <Route path={"/guide"}  element={<Guide />}/>
     </Routes>
   );
 }
