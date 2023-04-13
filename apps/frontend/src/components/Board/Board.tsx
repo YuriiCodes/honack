@@ -156,7 +156,7 @@ const Board = ({ isCreateTaskModalOpen, setIsCreateTaskModalOpen }: BoardProps) 
                                 if (!taskExecutor) return <div>Something went wrong...</div>;
 
                                 return (
-                                  <div className={"w-80 h-52 mt-2 rounded-md"}
+                                  <div className={"w-80 mt-5 rounded-md"}
                                        {...provided.draggableProps}
                                        {...provided.dragHandleProps}
                                        ref={provided.innerRef}>
