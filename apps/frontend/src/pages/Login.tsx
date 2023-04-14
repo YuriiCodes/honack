@@ -5,7 +5,7 @@ import { enqueueSnackbar } from "notistack";
 
 import * as Yup from "yup";
 import axios, { AxiosError } from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 const LoginSchema = Yup.object().shape({
@@ -60,7 +60,7 @@ const Login = () => {
                 <span>Email</span>
                 <div className={"flex justify-center w-full"}>
                   <Field type="text" id="email" name={"email"} placeholder="info@site.com"
-                         className="input input-bordered w-full"/>
+                         className="input input-bordered w-full" />
                   {errors.email && touched.email ? (
                     <div className={"text-orange-700"}>{errors.email}</div>
                   ) : null}
@@ -83,10 +83,17 @@ const Login = () => {
             </div>
             <div className="form-control mt-3">
               <button className="btn btn-primary" type={"submit"}>Log in</button>
+
+              <Link to={"/password/reset"}>
+                <div className={"btn btn-outline w-full my-5"}>
+                  Forgot password?
+                </div>
+              </Link>
             </div>
           </Form>
         )}
       </Formik>
+
     </div>
   );
 };

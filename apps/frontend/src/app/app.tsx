@@ -14,6 +14,7 @@ import { Project } from "../pages/Project";
 import ProjectList from "../pages/ProjectList";
 import { ProjectMembers } from "../pages/ProjectMembers";
 import Guide from "../pages/Guide";
+import ResetPassword from "../pages/ResetPassword";
 
 export function App() {
   const login = useAuthStore((state) => state.login);
@@ -40,6 +41,7 @@ export function App() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/password/reset" element={<ResetPassword />} />
       <Route path="/register" element={<Register />} />
       <Route path="/chooseTeam" element={<ChooseTeam />} />
       <Route path="/project/:id" element={<Project />} />

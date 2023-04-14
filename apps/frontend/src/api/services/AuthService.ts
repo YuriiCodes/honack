@@ -25,9 +25,16 @@ export default class AuthService {
     return response;
   }
 
+  static async resetPassword(email: string) {
+    return await $api.post<{ message: string }>("/auth/password/forgot", {
+      email
+    });
+  }
+
   static async getMe() {
     return await $api.get<GetMeApiResponse>("/auth/me");
   }
+
   static logout() {
     LocalStorageService.cleanToken();
 
