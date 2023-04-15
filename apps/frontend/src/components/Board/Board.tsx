@@ -149,10 +149,12 @@ const Board = ({ isCreateTaskModalOpen, setIsCreateTaskModalOpen, project }: Boa
           onDragEnd(result, columns, setColumns, tasks, setTasks);
         }}>
           {Object.entries(columns).map(([id, column]) => {
+
+            const isUserProjectOwner = project.ownerId === user?.id;
             return (
               <div className={"w-96 mx-5"}>
                 <h2 className={"text-2xl"}>{column.name}</h2>
-                {(column.name === columnNames.TODO && (project.ownerId === user?.id)) &&
+                {(column.name === columnNames.TODO && isUserProjectOwner) &&
                   <CreateTaskModal isCreateTaskModalOpen={isCreateTaskModalOpen}
                                    setIsCreateTaskModalOpen={setIsCreateTaskModalOpen} />}
                 <Droppable droppableId={id} key={id}>
@@ -178,11 +180,9 @@ const Board = ({ isCreateTaskModalOpen, setIsCreateTaskModalOpen, project }: Boa
                                        ref={provided.innerRef}>
 
                                     <TaskCard
-                                      title={item.title}
-                                      description={item.description}
-                                      assignedTo={taskExecutor.username}
-                                      points={item.points}
-                                      status={item.status}
+                                      item={item}
+                                      executor={taskExecutor}
+                                      shouldShowUpdateTaskModal={isUserProjectOwner}
                                     />
 
                                   </div>

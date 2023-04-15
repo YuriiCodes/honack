@@ -16,7 +16,7 @@ export default class TaskService {
       points,
       executorId,
       iterationId,
-      projectId,
+      projectId
     });
   }
 

@@ -1,11 +1,13 @@
 import * as Yup from "yup";
 import { Field, Form, Formik } from "formik";
 import { enqueueSnackbar } from "notistack";
+
 import React from "react";
 import TaskService from "../../api/services/TaskService";
 import { useAllProjectsStore } from "../../stores/AllProjectsStore";
 import { useIterationStore } from "../../stores/IterationStore";
 import ShareJoinCode from "../ShareJoinCode/ShareJoinCode";
+import { TaskType } from "@honack/util-shared-types";
 import { useUpdateTasksStore } from "../../stores/UpdateTasksStore";
 
 const CreateTaskSchema = Yup.object().shape({
@@ -20,14 +22,18 @@ const CreateTaskSchema = Yup.object().shape({
 
 interface CreateTaskFormProps {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+
+  item: TaskType;
 }
 
-const CreateTaskForm = ({ setIsModalOpen }: CreateTaskFormProps) => {
+const UpdateTaskForm = ({ setIsModalOpen, item }: CreateTaskFormProps) => {
   const currentProjectId = useAllProjectsStore((state) => state.currentProjectId);
   const getProjectUsersByProjectId = useAllProjectsStore((state) => state.getProjectUsersByProjectId);
   const currentIterationId = useIterationStore((state) => state.currentIterationId);
   const getProjectById = useAllProjectsStore((state) => state.getProjectById);
+
   const toggleShouldRefetchTasks = useUpdateTasksStore((state) => state.toggleShouldRefetchTasks);
+
   const [shouldShowJoinProjectCode, setShouldShowJoinProjectCode] = React.useState(false);
 
   if (!currentProjectId) return <div>Something went wrong</div>;
@@ -46,10 +52,10 @@ const CreateTaskForm = ({ setIsModalOpen }: CreateTaskFormProps) => {
   return (
     <Formik
       initialValues={{
-        title: "",
-        description: "",
-        points: 1,
-        executorId: -1
+        title: item.title,
+        description: item.description,
+        points: item.points,
+        executorId: item.executorId,
       }}
       validationSchema={CreateTaskSchema}
       onSubmit={async values => {
@@ -57,12 +63,22 @@ const CreateTaskForm = ({ setIsModalOpen }: CreateTaskFormProps) => {
           if (!currentIterationId || !currentProjectId) {
             return;
           }
-          const response = await TaskService.createTask(values.title, values.description, values.points, Number(values.executorId), currentIterationId, currentProjectId);
-          if (response.status === 201) {
-            enqueueSnackbar("Task created", { variant: "success", autoHideDuration: 2000 });
-            setIsModalOpen(false);
+
+          const response = await TaskService.updateTask({
+            id: item.id,
+            iterationId: item.iterationId,
+            title: values.title,
+            description: values.description,
+            creatorId: item.creatorId,
+            executorId: values.executorId,
+            points: values.points,
+            status: item.status,
+          })
+          if (response.status === 200) {
             toggleShouldRefetchTasks();
-            //clear form
+            enqueueSnackbar("Task updated", { variant: "success", autoHideDuration: 2000 });
+            setIsModalOpen(false);
+
             values.title = "";
             values.description = "";
             values.points = 1;
@@ -70,7 +86,7 @@ const CreateTaskForm = ({ setIsModalOpen }: CreateTaskFormProps) => {
 
             return;
           }
-        } catch (e: unknown ) {
+        } catch (e: unknown) {
           // Unknown error
           enqueueSnackbar("Something went wrong", { variant: "error" });
         }
@@ -96,7 +112,7 @@ const CreateTaskForm = ({ setIsModalOpen }: CreateTaskFormProps) => {
 
           <div className="form-control my-5">
             <label className="label">
-              <span className="label-text">Iteration description</span>
+              <span className="label-text">Task description</span>
             </label>
             <label className="input-group">
               <span>Description</span>
@@ -163,9 +179,8 @@ const CreateTaskForm = ({ setIsModalOpen }: CreateTaskFormProps) => {
             </div>
           )}
 
-
           <div className="form-control my-5">
-            <button className="btn btn-primary">Create task</button>
+            <button className="btn btn-primary" type={"submit"}>Update task</button>
           </div>
         </Form>
       )
@@ -173,4 +188,4 @@ const CreateTaskForm = ({ setIsModalOpen }: CreateTaskFormProps) => {
     </Formik>
   );
 };
-export default CreateTaskForm;
+export default UpdateTaskForm;

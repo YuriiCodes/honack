@@ -11,6 +11,7 @@ import { useIterationStore } from "../stores/IterationStore";
 import TaskService from "../api/services/TaskService";
 import { useTaskStore } from "../stores/TaskStore";
 import Breadcrumbs from "../components/Breadcrumbs/Breadcrumbs";
+import { useUpdateTasksStore } from "../stores/UpdateTasksStore";
 
 export const Project = () => {
   const { id } = useParams();
@@ -23,6 +24,7 @@ export const Project = () => {
   const currentIterationId = useIterationStore((state) => state.currentIterationId);
   const setCurrentIterationId = useIterationStore((state) => state.setCurrentIterationId);
 
+  const shouldRefetchTasks = useUpdateTasksStore((state) => state.shouldRefetchTasks);
 
   const setTasks = useTaskStore(state => state.setTasks);
   const [project, setProject] = useState<ProjectType | undefined>(undefined);
@@ -130,7 +132,7 @@ export const Project = () => {
   // because we might have created a new one
   useEffect(() => {
     void getTasks(currentProjectId, currentIterationId);
-  }, [currentIterationId, isCreateTaskModalOpen]);
+  }, [currentIterationId, shouldRefetchTasks]);
 
   if (!project) {
     return <div>Loading...</div>;

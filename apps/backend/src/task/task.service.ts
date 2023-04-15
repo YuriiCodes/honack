@@ -63,6 +63,7 @@ export class TaskService {
     task.title = updateTaskDto.title;
     task.description = updateTaskDto.description;
     task.executorId = updateTaskDto.executorId;
+    task.points = updateTaskDto.points;
 
     // validate that we get the right status
     if (!Object.values(TaskStatus).includes(updateTaskDto.status)) {
