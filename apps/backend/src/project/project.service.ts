@@ -125,6 +125,13 @@ export class ProjectService {
     }
   }
 
+  async checkIfUserIsCreator(userId, projectId) {
+    const project = await this.projectModel.findByPk(projectId);
+    if (project.ownerId !== userId) {
+      throw new NotFoundException(`User ${userId} is not creator of project ${projectId}`);
+    }
+  }
+
   async addUserToProject(userId: number, joinCode: string) {
     const project = await this.projectModel.findOne({
       where: {

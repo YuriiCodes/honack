@@ -67,4 +67,8 @@ export class IterationService {
   async checkIfUserBelongsToProject(userId: number, projectId: number) {
     await this.projectService.checkIfUserBelongsToProject(userId, projectId);
   }
+
+  async checkIfUserIsCreator(userId, projectId) {
+    await this.projectService.checkIfUserIsCreator(userId, projectId);
+  }
 }

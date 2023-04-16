@@ -29,9 +29,10 @@ export class TaskService {
     // check if task executor belongs to the project:
     await this.iterationService.checkIfUserBelongsToProject(createTaskDto.executorId, createTaskDto.projectId);
 
-    // check if task creator belongs to the project:
-    await this.iterationService.checkIfUserBelongsToProject(user.id, createTaskDto.projectId);
+    // check if task creator is the project owner
+    await this.iterationService.checkIfUserIsCreator(user.id, createTaskDto.projectId);
 
+    // check if the task creator
 
     return await this.taskModel.create({
       ...createTaskDto,
@@ -55,11 +56,15 @@ export class TaskService {
     }) as TaskType[];
   }
 
-  async update(id: number, updateTaskDto: UpdateTaskDto): Promise<TaskType> {
+  async update(id: number, updateTaskDto: UpdateTaskDto, user: UserFromToken): Promise<TaskType> {
+    // check if task moderator is the project owner
+    await this.iterationService.checkIfUserIsCreator(user.id, updateTaskDto.projectId);
+
     const task = await this.taskModel.findByPk(id);
     if (!task) {
       throw new NotFoundException("Task not found");
     }
+
     task.title = updateTaskDto.title;
     task.description = updateTaskDto.description;
     task.executorId = updateTaskDto.executorId;
