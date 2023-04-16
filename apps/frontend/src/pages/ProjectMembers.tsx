@@ -23,7 +23,7 @@ export const ProjectMembers = () => {
     const [numOfDays, setNumOfDays] = useState<number>(30);
     const [shouldShowJoinCode, setShouldShowJoinCode] = useState<boolean>(false);
     const [isUpdateUserSalaryModalOpen, setIsUpdateUserSalaryModalOpen] = useState<boolean>(false);
-    const user = useAuthStore((state) => state.user);
+    const authorizedUser = useAuthStore((state) => state.user);
 
     async function getProject(id: string | undefined) {
       if (!id) return;
@@ -95,7 +95,7 @@ export const ProjectMembers = () => {
       return <div>Loading... No users</div>;
     }
 
-    if (!user) {
+    if (!authorizedUser) {
       return <div>Loading... No user</div>;
     }
 
@@ -197,7 +197,7 @@ export const ProjectMembers = () => {
                           </div>
                         </div>
                       </td>
-                      {project.ownerId === user.id ? (
+                      {project.ownerId === authorizedUser.id ? (
                         <td>
                           {"$"}{user.salary}
                           <UpdateSalaryModal previousSalary={user.salary || 0} userId={user.id || -1}
