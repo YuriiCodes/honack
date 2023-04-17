@@ -57,9 +57,6 @@ export class TaskService {
   }
 
   async update(id: number, updateTaskDto: UpdateTaskDto, user: UserFromToken): Promise<TaskType> {
-    // check if task moderator is the project owner
-    await this.iterationService.checkIfUserIsCreator(user.id, updateTaskDto.projectId);
-
     const task = await this.taskModel.findByPk(id);
     if (!task) {
       throw new NotFoundException("Task not found");
