@@ -1,13 +1,17 @@
 # Honack
 
+
+https://user-images.githubusercontent.com/96592769/233348726-6450eb8d-201b-4a55-ae06-25702cb68612.mp4
+
+
 ## Project description
-Honack is a powerful task tracking and payroll calculation tool designed to help teams stay organized and efficient. Honack streamlines project management by offering a user-friendly, drag-and-drop board with three sections: To Do, In Progress, and Done. As tasks are moved from one section to another, their status is automatically updated, so team members always know where a project stands.
+🚀 Honack is a powerful task tracking and payroll calculation tool designed to help teams stay organized and efficient. Honack streamlines project management by offering a user-friendly, 🎨 drag-and-drop board with three sections: To Do, In Progress, and Done. As tasks are moved from one section to another, their status is automatically updated, so team members always know where a project stands.
 
-With Honack, users can sign up and create or join projects, each of which has iterations and tasks assigned to it. Tasks are assigned a certain number of points, and each project has a team with a base salary for each member. Based on the number of points collected by each member, their salary is either raised or lowered, providing an honest and fair way to calculate payroll.
+👥 With Honack, users can sign up and create or join projects, each of which has iterations and tasks assigned to it. Tasks are assigned a certain number of points, and each project has a team with a base salary for each member. Based on the number of points collected by each member, their salary is either raised or lowered, providing an honest and fair way to calculate payroll.
 
-In the project members tab, Honack provides a variety of visualizations to help users track team efficiency. A bar chart, created using the Recharts library, displays each member's efficiency, while a table provides detailed data on each worker. Users can also export reports into CSV format for further analysis.
+📊 In the project members tab, Honack provides a variety of visualizations to help users track team efficiency. A bar chart 📈, created using the Recharts library, displays each member's efficiency, while a table 📝 provides detailed data on each worker. Users can also export reports into CSV format for further analysis.
 
-Honack was built using a range of cutting-edge tools and technologies, including TypeScript, React, Tailwind, DaisyUI, Zustand, React-Beautiful-DND, JWT Tokens, Nest.js, Recharts, React-CSV, and NX Monorepo & ESLint. The project uses PostgreSQL with Sequelize ORM, and is deployed using Docker Compose. Email notifications are handled by SendGrid email sender.
+🛠️ Honack was built using a range of cutting-edge tools and technologies, including TypeScript, React, Tailwind, DaisyUI, Zustand, React-Beautiful-DND, JWT Tokens, Nest.js, Recharts, React-CSV, and NX Monorepo & ESLint. The project uses PostgreSQL with Sequelize ORM, and is deployed using Docker Compose. Email notifications 📨 are handled by SendGrid email sender.
 
 
 ## How to set up
